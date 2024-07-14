@@ -10,11 +10,11 @@ class SoldierCondition;
 class SoldierCondition
 {
     public:
-    SoldierCondition():vacancyindex(0),type((soldiers)0),zhenying(10),x(10),y(10){a=nullptr;}
-    SoldierCondition input(SoldierCondition &tem, int x, int y, int zhenying);//用于从troop模式到war模式的输入，并非完全相等
-    void lay(soldier *);
+    SoldierCondition():vacancyindex(0),type((soldiers)0),zhenying(10),xFront(10),yFront(10),xWar(100),yWar(100){a=nullptr;}
+    SoldierCondition input(SoldierCondition &tem, int zhenying, int x=10, int y=10);//用于从troop模式到war模式的输入，并非完全相等
+    void lay(soldier * ,int, int);
     void go();
-    SoldierCondition(SoldierCondition &p);
+    SoldierCondition(const SoldierCondition &p);
     void dying();
     void relive(int x=0);//如果x=0默认回满血，要不回复x滴血
     std::pair<int*,soldier*> getInfo();
@@ -22,18 +22,20 @@ class SoldierCondition
     int vacancyindex;
     soldiers type;
     soldier *a;
-    int zhenying,x,y;
+    int zhenying,xFront,yFront,xWar,yWar;
 };
 
 class troop
 {
     public:
-    troop():Warehouse_Amount(0),OnFrontline_Amount(0),AliveAmount(0),OnFrontline_limit(1),Warehouse_limit(3){}
+    troop():Warehouse_Amount(0),OnFrontline_Amount(0),AliveAmount(0),OnFrontline_limit(2),Warehouse_limit(3){}
+    troop(const troop&);
     void changeAmount(int deltaWareAmount = 0, int deltaFrontAmount = 0, int deltaWareLimit = 0, int deltaFrontLimit = 0);
     void gota(soldier *newsoldier);
     std::pair<std::vector<soldier*>,int*> GetInfo();
     int getAlive();
     void TurnOnFronter(soldier *a, int x, int y);
+    void showFrontline();
     void MakeBack(int x, int y);
     SoldierCondition** MyCondition();
     private:
@@ -51,10 +53,11 @@ class player
     public:
     player();
     player(char* name);
+    player(const player &);
     // void buy();//purchase a new soldier from the store
     void gainExperience(int delta);
     std::pair<std::string,int*> Getinfo();
-    troop MyTroop(){return Atroop;}
+    troop* MyTroop(){return &Atroop;}
     private:
     std::string name;
     troop Atroop;
@@ -67,7 +70,8 @@ class playchess
 {
     public:
     playchess();
-    player *A;
+    // void showPlayer();
+    std::vector<player> A;
     private:
     int playtime;
     int palyernum;
@@ -78,15 +82,17 @@ class playchess
 class war
 {
     public:
-    war(player enemy[2]);
+    war(std::vector<player> enemy);
+    void show();
     int getFirst();
     int MakeDistance(int a[10][5], int zhenying, int x, int y);
     int *pickAttackingEnemy(int x);   //x为目前正在出手的己方阵营
     int *pickLeastHpEnemy(int x);
+    void deadout();
     void moveOrAttack(int zhenying, int x, int y);
     void effects(int number, int x, int y);//x,y为核验的对象为位置，number为所在的玩家阵营序号
     void running();
-    player A[2];
+    std::vector<player> A;
     SoldierCondition WarPosition[10][5];
 };
 

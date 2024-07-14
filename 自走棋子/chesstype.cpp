@@ -1,6 +1,7 @@
 #include"chesstype.h"
 #include"tools.h"
 #include<iostream>
+#include<iomanip>
 
 void soldier::checkState(int x, int y, int num)
 {
@@ -8,26 +9,65 @@ void soldier::checkState(int x, int y, int num)
     {
         for(int i=0;i<MyState.getInfo().first.size();i++)
             if(MyState.getInfo().second[1][i]==0)
+            {
                 switch((int)MyState.getInfo().first[i])
                 {
-                    case 1:addindex(0,0,0,0,MyState.getInfo().second[0][i]);break;
+                    case 1:
+                    {
+                        if(MyState.getInfo().second[0][i]>=30)
+                            defense=Maxdefense;
+                        else
+                            addindex(0,0,0,0,MyState.getInfo().second[0][i]);
+                        break;
+                    }
                     case 2:addindex(0,0,0,-MyState.getInfo().second[0][i]);break;
                     case 3:addindex(0,0,-MyState.getInfo().second[0][i]);break;
                     case 4:addindex(0,0,0,0,0,-MyState.getInfo().second[0][i]);break;
                     case 6:switching(&freedom);
                     default:break;
                 }
+            }
         MyState.erase();
         for(int i=0;i<MyState.getInfo().first.size();i++)
             switch((int)MyState.getInfo().first[i])
             {
-                case 1:addindex(0,0,0,0,-MyState.getInfo().second[0][i]);break;
-                case 2:addindex(0,0,0,+MyState.getInfo().second[0][i]);break;
-                case 3:addindex(0,0,-MyState.getInfo().second[0][i]);break;
-                case 4:addindex(0,0,0,0,0,+MyState.getInfo().second[0][i]);break;
+                case 1:
+                {
+                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
+                    {
+                        if(MyState.getInfo().second[0][i]>=30)
+                            defense=(int)(Maxdefense*(double)((100-MyState.getInfo().second[0][i])/100));
+                        else
+                            addindex(0,0,0,0,-MyState.getInfo().second[0][i]);
+                    }
+                    break;
+                }
+                case 2:
+                {
+                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
+                        addindex(0,0,0,+MyState.getInfo().second[0][i]);
+                    break;
+                }
+                case 3:
+                {
+                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
+                        addindex(0,0,-MyState.getInfo().second[0][i]);
+                    break;
+                }
+                case 4:
+                {
+                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
+                        addindex(0,0,0,0,0,+MyState.getInfo().second[0][i]);
+                    break;
+                }
                 case 5:addindex(-MyState.getInfo().second[0][i]);break;
                 case 7:addindex(-MyState.getInfo().second[0][i]);break;
-                case 6:switching(&freedom);break;
+                case 6:
+                {
+                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
+                        switching(&freedom);
+                    break;
+                }
                 default:break;
             }  
         MyState.settlement();  
@@ -35,42 +75,90 @@ void soldier::checkState(int x, int y, int num)
     else
     {
         for(int i=0;i<BearState.getInfo().first.size();i++)
-        {
             if(BearState.getInfo().second[3][i]==x&&BearState.getInfo().second[4][i]==y&&BearState.getInfo().second[2][i]==num)
                 if(BearState.getInfo().second[1][i]==0)
+                {
                     switch((int)BearState.getInfo().first[i])
                     {
-                        case 1:addindex(0,0,0,0,BearState.getInfo().second[0][i]);break;
+                        case 1:
+                        {
+                            if(BearState.getInfo().second[0][i]>=30)
+                                defense=Maxdefense;
+                            else
+                                addindex(0,0,0,0,BearState.getInfo().second[0][i]);
+                            break;
+                        }
                         case 2:addindex(0,0,0,-BearState.getInfo().second[0][i]);break;
                         case 3:addindex(0,0,-BearState.getInfo().second[0][i]);break;
                         case 4:addindex(0,0,0,0,0,-BearState.getInfo().second[0][i]);break;
                         case 6:switching(&freedom);
                         default:break;
                     }
-            BearState.erase(x,y,num);
-        }
+                }
+        BearState.erase(x,y,num);
         for(int i=0;i<BearState.getInfo().first.size();i++)
-        {
             if(BearState.getInfo().second[3][i]==x&&BearState.getInfo().second[4][i]==y&&BearState.getInfo().second[2][i]==num)
+            {
                 switch((int)BearState.getInfo().first[i])
                 {
-                    case 1:addindex(0,0,0,0,-BearState.getInfo().second[0][i]);break;
-                    case 2:addindex(0,0,0,+BearState.getInfo().second[0][i]);break;
-                    case 3:addindex(0,0,-BearState.getInfo().second[0][i]);break;
-                    case 4:addindex(0,0,0,0,0,+BearState.getInfo().second[0][i]);break;
+                    case 1:
+                    {
+                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
+                        {
+                            if(BearState.getInfo().second[0][i]>=30)
+                                defense=(int)(Maxdefense*(double)((100-BearState.getInfo().second[0][i])/100));
+                            else
+                                addindex(0,0,0,0,-BearState.getInfo().second[0][i]);
+                        }
+                        break;
+                    }
+                    case 2:
+                    {
+                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
+                            addindex(0,0,0,+BearState.getInfo().second[0][i]);
+                        break;
+                    }
+                    case 3:
+                    {
+                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
+                            addindex(0,0,-BearState.getInfo().second[0][i]);
+                        break;
+                    }
+                    case 4:
+                    {
+                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
+                            addindex(0,0,0,0,0,+BearState.getInfo().second[0][i]);
+                        break;
+                    }
                     case 5:addindex(-BearState.getInfo().second[0][i]);break;
-                    case 7:addindex(-BearState.getInfo().second[0][i]);break;
-                    case 6:switching(&freedom);break;
+                    case 7:
+                    {
+                        if(random()<missrate)
+                            {std::cout<<"miss!"<<std::endl;break;}
+                            int harming=BearState.getInfo().second[0][i]-defense;
+                        if(shield>=harming)
+                            addindex(0,0,0,0,0,-harming);
+                        else
+                            addindex(-harming+shield)/*,addindex(0,BearState.getInfo().second[0][i]-shield)*/;//挨打加能量暂时不要
+                        break;
+                    }
+                    case 6:
+                    {
+                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
+                            switching(&freedom);
+                        break;
+                    }
                     default:break;
-                }  
-            BearState.settlement(x,y,num);  
-        }
-    }
+                    
+                } 
+        } 
+        BearState.settlement(x,y,num);  
+    }   
 }
 
 void soldier::addindex(int Hp, int rage, int missrate, int harm, int defense, int shield, int level, int MaxHp, int speed, int range)
 {
-    this->Hp=edge(this->Hp+Hp,0,MaxHp);
+    this->Hp=edge(this->Hp+Hp,0,this->MaxHp);
     this->shield=edgeleft(this->shield+shield,0);
     this->level+=level;
     this->harm=edgeleft(this->harm+harm,0);
@@ -89,8 +177,10 @@ void soldier::makerecord(int zhenying, int x, int y, soldierState a, int strengt
 
 State soldier::recordRun()//meixiewan
 {
+    std::cout<<"recordRun!"<<std::endl;
     State tem=record;
     record.clear();
+    std::cout<<"recordRun ends!"<<std::endl;
     return tem;
 }
 
@@ -104,7 +194,7 @@ void soldier::changeMyState(int a, int strength, int duration, int x, int y, int
 
 int* soldier::getInfo()
 {
-    int* Info = new int[12];
+    int* Info = new int[13];
     Info[0]=Hp,
     Info[1]=rage,
     Info[2]=missrate,
@@ -117,7 +207,16 @@ int* soldier::getInfo()
     Info[9]=speed;
     Info[10]=range;
     Info[11]=(int)type;
+    Info[12]=Maxdefense;
     return Info;
+}
+
+void soldier::show()
+{
+    std::cout<<"Hp:"<<Hp<<"/"<<MaxHp<<std::setw(10)<<"rage:"<<rage<<std::setw(10)<<"missrate:"<<missrate<<std::setw(10)<<"harm:"<<harm<<std::endl;
+    std::cout<<"defense:"<<defense<<std::setw(10)<<"shield:"<<shield<<std::setw(10)<<"level:"<<level<<std::setw(10)<<"freedom:"<<freedom<<std::endl;
+    std::cout<<"speed:"<<speed<<std::setw(10)<<"range:"<<range<<std::setw(10)<<"type:"<<type<<std::endl;
+    // BearState.show();
 }
 
 State::State()
@@ -125,6 +224,7 @@ State::State()
     a.push_back((soldierState)0);
     strength.push_back(999);
     duration.push_back(999);
+    Totalduration.push_back(999);
     YouOrMe.push_back(0);
     position[0].push_back(0),position[1].push_back(0);
 }
@@ -132,10 +232,18 @@ State::State()
 State::State(const State&tem)
 {
     a=tem.a;
+    Totalduration=tem.Totalduration;
     duration=tem.duration;
     strength=tem.strength;
     YouOrMe=tem.YouOrMe;
     position[0]=tem.position[0],position[1]=tem.position[1];
+}
+
+void State::show()
+{
+    std::cout<<"amount:"<<a.size()<<std::endl;
+    for(int i=0;i<a.size();i++)
+        std::cout<<"Type:"<<a[i]<<std::setw(10)<<"Strength:"<<strength[i]<<std::setw(10)<<"Duration:"<<duration[i]<<"/"<<Totalduration[i]<<std::setw(10)<<"zhenying:"<<YouOrMe[i]<<std::setw(10)<<"FrontlinePosition:("<<position[0][i]<<","<<position[1][i]<<")"<<std::endl;
 }
 
 std::pair<std::vector<soldierState>,std::vector<std::vector<int>>> State::getInfo()
@@ -144,6 +252,7 @@ std::pair<std::vector<soldierState>,std::vector<std::vector<int>>> State::getInf
     tem.first=a;
     std::vector<std::vector<int>> tem1;
     tem1.push_back(strength),tem1.push_back(duration),tem1.push_back(YouOrMe),tem1.push_back(position[0]),tem1.push_back(position[1]);
+    tem1.push_back(Totalduration);
     tem.second=tem1;
     return tem;
 }
@@ -153,6 +262,7 @@ void State::SthHappen(soldierState a, int strength, int duration, int zhenying, 
     if(this->a.size()!=0)
         if(this->a.front()==(soldierState)0)
         {
+            Totalduration.clear();
             this->a.clear();
             this->strength.clear();
             this->duration.clear();
@@ -162,6 +272,7 @@ void State::SthHappen(soldierState a, int strength, int duration, int zhenying, 
     this->a.push_back(a);
     this->strength.push_back(strength);
     this->duration.push_back(duration);
+    Totalduration.push_back(duration);
     YouOrMe.push_back(zhenying);
     position[0].push_back(x), position[1].push_back(y);
 }
@@ -169,10 +280,10 @@ void State::SthHappen(soldierState a, int strength, int duration, int zhenying, 
 void State::settlement(int x, int y, int num)
 {
     int length=a.size();
-    if(x==0&&y==0)
+    if(x==10&&y==10)
     {
         for(int i=0;i<length;i++)
-        duration[i]--;
+            duration[i]--;
     }
     else
     {
@@ -191,7 +302,7 @@ void State::clear()
 void State::erase(int x, int y, int num)
 {
     int length=a.size();
-    if(x==0&&y==0)
+    if(x==10&&y==10)
     {
         for(int i=length-1;i>=0;i--)
             if(duration[i]==0)
@@ -202,10 +313,11 @@ void State::erase(int x, int y, int num)
                 YouOrMe.erase(YouOrMe.begin()+i);
                 position[0].erase(position[0].begin()+i);
                 position[1].erase(position[1].begin()+i);
+                Totalduration.erase(Totalduration.begin()+i);
             }
     }
     else
-        for(int i=0;i<length;i++)
+        for(int i=length-1;i>=0;i--)
             if(position[0][i]==x&&position[1][i]==y&&duration[i]==0&&YouOrMe[i]==num)
             {
                 a.erase(a.begin()+i);
@@ -214,6 +326,7 @@ void State::erase(int x, int y, int num)
                 YouOrMe.erase(YouOrMe.begin()+i);
                 position[0].erase(position[0].begin()+i);
                 position[1].erase(position[1].begin()+i);
+                Totalduration.erase(Totalduration.begin()+i);
             }
     if(a.size()==0)
         SthHappen((soldierState)0,999,999,0,0,0);
@@ -251,17 +364,19 @@ int Reiki::switchstate()
         return state;
 }
 
-void ParticleWarrior::done(int *position[3])
+void ParticleWarrior::done(std::vector<std::vector<int>> position)
 {
+    std::cout<<"The Particle-Warrior attack!"<<std::endl;
     if(getInfo()[7]==0) return;
     if(getInfo()[1]!=100)
     {
         if(showstate()==0)
-                makerecord(1,position[0][0],position[0][0],(soldierState)2,getInfo()[3],1),changeparticle(34);
+                makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,getInfo()[3],1),changeparticle(34);
         else
         {
             changeMyState(4,3+getInfo()[5]*2,1);
             changeMyState(2,getInfo()[3]*((double)getInfo()[6]/2.0+0.5),1);
+            changeparticle(-1000);
             switchstate();
         }
         if(changeparticle(0)==100)
@@ -271,6 +386,58 @@ void ParticleWarrior::done(int *position[3])
     else
     {
         addindex(getInfo()[8]/3);
+        addindex(0,-100);
         changeMyState(2,2,2);
     }
+    // std::cout<<"attack ends."<<std::endl;
+}
+
+void ParticleWarrior::show()
+{
+    soldier::show();
+    std::cout<<"Particle Amount:"<<changeparticle(0)<<std::endl;
+}
+
+void LaserArcher::done(std::vector<std::vector<int>> position)
+{
+    std::cout<<"The Laser-Archer attack!"<<std::endl;
+    if(getInfo()[7]==0) {std::cout<<"dizzied"<<std::endl;return;}
+    if(getInfo()[1]!=100)
+    {
+        if(showstate()==0)
+                makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,getInfo()[3],1),changeparticle(34);
+        else
+        {
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)1,100,1);
+            float k;
+            switch(getInfo()[6])
+            {
+                case 1:k=0.5;break;
+                case 2:k=0.65;break;
+                case 3:k=0.8;break;
+            }
+            for(int i=0;i<position[0].size();i++)
+            {
+                makerecord(position[2][i],position[0][i],position[1][i],(soldierState)7,getInfo()[3]*cifang(k,i),1);
+            }
+            changeparticle(-1000);
+            switchstate();
+        }
+        if(changeparticle(0)==100)
+            switchstate();
+        addindex(0,20);
+    }
+    else
+    {
+        makerecord(position[2][0],position[0][0],position[1][0],(soldierState)6,1,1);
+        makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,getInfo()[3]*2,1);
+        addindex(0,-100);
+    }   
+}
+
+void LaserArcher::show()
+{
+    soldier::show();
+    std::cout<<"Particle Amount:"<<changeparticle(0)<<std::endl;
+    
 }

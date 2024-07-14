@@ -6,6 +6,7 @@ enum soldiers
 {
     Dead=0,
     particlewarrior=1,
+    laserarcher=2
 };
 
 enum soldierState
@@ -27,6 +28,7 @@ class State
     public:
     State();
     State(const State &a);
+    void show();
     std::pair<std::vector<soldierState>,std::vector<std::vector<int>>> getInfo();
     void SthHappen(soldierState a, int strength, int duration, int zhenying, int x, int y);
     void settlement(int x = 10, int y = 10, int num = 0);
@@ -36,6 +38,7 @@ class State
     std::vector<soldierState> a;
     std::vector<int> strength;
     std::vector<int> duration;
+    std::vector<int>Totalduration;
     std::vector<int> YouOrMe;//对敌方为1对我方为0
     std::vector<int> position[2];//如果是自己的话默认为10，10
 };
@@ -43,18 +46,19 @@ class State
 class soldier
 {
     public:
-    soldier(int Hp=0,int rage=0, int missrate=0, int harm=5, int defense=1, int shield=0, int level=0, int freedom=0, int MaxHp=1, int speed=1, int range=0,int type=0):
+    soldier(int Hp=0,int rage=0, int missrate=0, int harm=5, int defense=1, int shield=0, int level=0, int freedom=0, int MaxHp=1, int speed=1, int range=0,int type=0, int Maxdefense=0):
         Hp(Hp),harm(harm),defense(defense),
         missrate(missrate),level(level),type((soldiers)type),
         rage(rage),shield(shield),freedom(freedom),
-        MaxHp(MaxHp),speed(speed),range(range){}
-    virtual void done(int* position[3]) = 0;//number,line,row,camp
+        MaxHp(MaxHp),speed(speed),range(range),Maxdefense(Maxdefense){}
+    virtual void done(std::vector<std::vector<int>> position) = 0;//number,line,row,camp
     void checkState(int x = 10, int y = 10, int num = 0);//x,y是目前正结算的单位位置，num是相对阵营，无参数使用时默认操作MyState
     void addindex(int Hp = 0, int rage = 0, int missrate = 0, int harm = 0, int defense = 0, int shield = 0, int level = 0, int MaxHp = 0, int speed = 0, int range = 0);
     void makerecord(int zhenying, int x, int y, soldierState a, int strength, int duration);
     State recordRun();
     void changeMyState(int a, int strength, int duration, int x = 10, int y = 10, int zhenying = 0);
     int* getInfo();
+    virtual void show();
     private:
     State record;//用来记录自己对别人干了什么
     State MyState;
@@ -71,6 +75,7 @@ class soldier
     int speed;
     int range;
     soldiers type;
+    int Maxdefense;
 };
 
 //角色分为四个阵营，分别为粒子（particle），Reiki（灵气），元素（element）和野蛮（wild）各有特色
@@ -122,52 +127,61 @@ class wild
 class warrior:public soldier
 {
     public:
-    warrior(int type= 0, int Hp=50, int harm=4, int defense=2, int missrate=10, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 2, int range = 1):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type){}
+    warrior(int type= 0, int Hp=50, int harm=4, int defense=2, int missrate=10, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 2, int range = 1):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense){}
 };
 
 class archer:public soldier
 {
     public:
-    archer(int Hp=30,int harm=6, int defense=1, int missrate=5, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 1, int range = 4, int type=0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type){}
+    archer(int type = 0, int Hp=30,int harm=6, int defense=1, int missrate=5, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 1, int range = 4):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense){}
 };
 
 class magician:public soldier
 {
     public:
-    magician(int Hp=25,int harm=5, int defense=0, int missrate=5, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 1, int range = 3, int type=0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type){}
+    magician(int Hp=25,int harm=5, int defense=0, int missrate=5, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 1, int range = 3, int type=0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense){}
 };
 
 class assassin:public soldier
 {
-    assassin(int Hp=30,int harm=8, int defense=1, int missrate=20, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 3, int range = 2,int type=0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type){}
+    assassin(int Hp=30,int harm=8, int defense=1, int missrate=20, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 3, int range = 2,int type=0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type,defense){}
 };
 
 class Mecha:public soldier, public particle
 {
     public:
-    Mecha(int Hp=70, int harm=8, int defense=4, int missrate=0, int level=0, int rage=0, int shield = 0, int energyamount=0, int freedom = 1, int speed = 2, int range = 2, int type=0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type),particle(energyamount){}
+    Mecha(int Hp=70, int harm=8, int defense=4, int missrate=0, int level=0, int rage=0, int shield = 0, int energyamount=0, int freedom = 1, int speed = 2, int range = 2, int type=0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type,defense),particle(energyamount){}
 };
 
 class JadeEmperor:public soldier, public Reiki
 {
-    JadeEmperor(int Hp=30, int harm=12, int defense=8, int missrate=30, int level=0, int rage=0, int shield = 0, int Reikiamount=0, int freedom = 1, int speed = 1, int range =5, int type =0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type),Reiki(Reikiamount){}
+    JadeEmperor(int Hp=30, int harm=12, int defense=8, int missrate=30, int level=0, int rage=0, int shield = 0, int Reikiamount=0, int freedom = 1, int speed = 1, int range =5, int type =0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type,defense),Reiki(Reikiamount){}
 };
 
 class Dragon:public soldier, public element
 {
-    Dragon(int Hp=40, int harm=6, int defense=5, int missrate=15, int level=0, int rage=0, int shield = 0, int freedom = 1, int speed = 2, int fire=1, int electricity=1, int range =4, int type =0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type),element(fire,electricity){}
+    Dragon(int Hp=40, int harm=6, int defense=5, int missrate=15, int level=0, int rage=0, int shield = 0, int freedom = 1, int speed = 2, int fire=1, int electricity=1, int range =4, int type =0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type,defense),element(fire,electricity){}
 };
 
 class werewolf:public soldier, public wild
 {
-    werewolf(int Hp=100, int harm=8, int defense=2, int missrate=20, int level=0, int rage=0, int shield = 0, int freedom = 1, int speed = 5, int wildness=0, int range =1, int type =0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type),wild(wildness){}
+    werewolf(int Hp=100, int harm=8, int defense=2, int missrate=20, int level=0, int rage=0, int shield = 0, int freedom = 1, int speed = 5, int wildness=0, int range =1, int type =0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,type,defense),wild(wildness){}
 };
 
 class ParticleWarrior:public warrior, public particle
 {
     public:
     ParticleWarrior():warrior(1),particle(){}
-    virtual void done(int* position[3]);
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+};
+
+class LaserArcher:public archer, public particle
+{
+    public:
+    LaserArcher():archer(2),particle(){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
 };
 
 #endif

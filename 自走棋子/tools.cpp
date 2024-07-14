@@ -70,3 +70,17 @@ int *FindMinPosition(int a[2][5], int low, int high)
             }
     return nullptr;
 }
+
+float cifang(int x, int cifang)
+{
+    int tem=1;
+    if(cifang==0)
+        return 1;
+    else 
+    {
+        for(int i=0;i<cifang;i++)
+            tem*=x;
+        return tem;
+    }
+
+}
