@@ -1,1 +1,1 @@
-g++ -o chesstype.cpp gamehost.cpp tools.cpp demo. exe
+g++ chessbase.cpp chesstype.cpp main.cpp playchess.cpp player.cpp store.cpp tools.cpp war.cpp -o demo.exe -std=c++14

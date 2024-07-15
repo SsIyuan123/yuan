@@ -71,9 +71,9 @@ int *FindMinPosition(int a[2][5], int low, int high)
     return nullptr;
 }
 
-float cifang(int x, int cifang)
+float cifang(float x, int cifang)
 {
-    int tem=1;
+    float tem=1;
     if(cifang==0)
         return 1;
     else 
@@ -83,4 +83,19 @@ float cifang(int x, int cifang)
         return tem;
     }
 
+}
+
+int Up_quzheng(float x)
+{
+    int tem=x;
+    return ++tem;;
+}
+
+int Include(int x, std::vector<int> a)
+{
+    int flag=0;
+    for(int i=0;i<a.size();i++)
+        if(x==a[i])
+            flag=1;
+    return flag;
 }
