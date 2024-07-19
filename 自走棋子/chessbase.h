@@ -8,7 +8,9 @@ enum soldiers
     particlewarrior=1,
     laserarcher=2,
     particleengineer=3,
-    dimensionassassin=4
+    dimensionassassin=4,
+    swordman=5,
+    hypnotist=6
 };
 
 enum soldierState
@@ -50,7 +52,7 @@ class State
 class soldier
 {
     public:
-    soldier(int Hp=0,int rage=0, int missrate=0, int harm=5, int defense=1, int shield=0, int level=0, int freedom=0, int MaxHp=1, int speed=1, int range=0,int type=0, int Maxdefense=0, int reBound=0, int rageUp):
+    soldier(int Hp=0,int rage=0, int missrate=0, int harm=5, int defense=1, int shield=0, int level=0, int freedom=0, int MaxHp=1, int speed=1, int range=0,int type=0, int Maxdefense=0, int reBound=0, int rageUp = 0):
         Hp(Hp),harm(harm),defense(defense),
         missrate(missrate),level(level),type((soldiers)type),
         rage(rage),shield(shield),freedom(freedom),reBound(reBound),

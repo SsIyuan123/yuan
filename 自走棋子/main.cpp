@@ -2,27 +2,43 @@
 #include "chesstype.h"
 #include "playchess.h"
 #include "war.h"
+#include"store.h"
 #include <iostream>
 #include <string>
 #include <random>
 
 int main() {
-    playchess mainchess;
-    ParticleWarrior Rihanna,AiMee;
-    LaserArcher Taylor,Betty;
+    // playchess mainchess;
+    // mainchess.home();
+
+    player a(1,"Sy");
+    player b(2,"yy");
     DimensionAssassin Kevin,AA;
-    ParticleEngineer amy;
-    mainchess.A[0].MyTroop()->gota(&Taylor);
-    mainchess.A[0].MyTroop()->gota(&Kevin);
-    mainchess.A[0].MyTroop()->TurnOnFronter(&Taylor,0,0);
-    mainchess.A[0].MyTroop()->TurnOnFronter(&Kevin,1,1);
-    mainchess.A[0].MyTroop()->showFrontline();
-    mainchess.A[1].MyTroop()->gota(&Rihanna);
-    mainchess.A[1].MyTroop()->gota(&AA);
-    mainchess.A[1].MyTroop()->TurnOnFronter(&Rihanna,0,4);
-    mainchess.A[1].MyTroop()->TurnOnFronter(&AA,0,1);
-    mainchess.A[1].MyTroop()->showFrontline();
-    war demowar(mainchess.A);
-    demowar.running();
-    return 0;
+    Swordman yy,aa;
+    a.MyTroop()->testOnFront(&yy,1,1);
+    b.MyTroop()->testOnFront(&AA,0,0);
+    std::vector<player*> GreatWar={&a,&b};
+    war testwar(GreatWar,0);
+    testwar.running();
+
+    // mainchess.createAccount();
+    
+    // mainchess.determinePeopleAmount();
+    // mainchess.WriteA();
+    // ParticleWarrior Rihanna,AiMee;
+    // LaserArcher Taylor,Betty;
+    // ParticleEngineer amy;
+    // mainchess.allPlayer[0].MyTroop()->gota(&Taylor);
+    // mainchess.allPlayer[0].MyTroop()->gota(&Kevin);
+    // mainchess.allPlayer[0].MyTroop()->turnOnFrontline();
+    // mainchess.allPlayer[0].MyTroop()->turnOnFrontline();
+    // mainchess.allPlayer[0].MyTroop()->showFrontline();
+    // mainchess.allPlayer[1].MyTroop()->gota(&Rihanna);
+    // mainchess.allPlayer[1].MyTroop()->gota(&AA);
+    // mainchess.allPlayer[1].MyTroop()->turnOnFrontline();
+    // mainchess.allPlayer[1].MyTroop()->turnOnFrontline();
+    // mainchess.allPlayer[1].MyTroop()->showFrontline();
+    // war demowar(mainchess.A);
+    // demowar.running();
+    // return 0;
 }

@@ -20,6 +20,20 @@ float cifang(float x, int cishu);
 
 int Up_quzheng(float x);
 
-int Include(int, std::vector<int>);
+template <typename T>
+int Include(T& x, std::vector<T>& a) {
+    for (int i = 0; i < a.size(); ++i) {
+        if (x == a[i]) {
+            return 1; // 如果找到 x，返回 true
+        }
+    }
+    return 0; // 如果未找到 x，返回 false
+}
+
+void toEnter(int x);
+
+char lower(char a);
+
+void fengexian(int start, int end, int step, int internal);
 
 #endif

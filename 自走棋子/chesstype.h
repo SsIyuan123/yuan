@@ -23,19 +23,21 @@ class particle
 class Reiki
 {
     public:
-    Reiki(int Reikiamount = 0):Reikiamount(0),state(0){}
-    int changeReiki(int delta);
+    Reiki(int Reikiamount = 0):Reikiamount(0),state(0),ReikiUp(34){}
+    void changeReiki(int ReikiAmount, int ReikiUp=0);
     int switchstate();
+    std::vector<int> ReikiInfo();
     private:
     int Reikiamount;
     int state;
+    int ReikiUp;
 };
 
 class element
 {
     public:
     element(int fireflag = 0, int electricityflag = 0){}
-    void changeflag(int fire, int elctricity);
+    // void changeflag(int fire, int elctricity);
     private:
     int fireflag;
     int electricityflag;
@@ -45,7 +47,7 @@ class wild
 {
     public:
     wild(int wildness = 0){}
-    void changewildness(int delta);
+    // void changewildness(int delta);
     private:
     int wildness;
 };
@@ -74,7 +76,7 @@ class magician:public soldier
 class assassin:public soldier
 {
     public:
-    assassin(int type = 0, int Hp=35,int harm=7, int defense=1, int missrate=20, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 3, int range = 2, int rageUp):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense,0,rageUp){}
+    assassin(int type = 0, int Hp=35,int harm=7, int defense=1, int missrate=20, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 3, int range = 2, int rageUp = 20):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense,0,rageUp){}
     virtual void levelUp();
 };
 
@@ -130,6 +132,24 @@ class DimensionAssassin:public assassin, public particle
 {
     public:
     DimensionAssassin():assassin(4),particle(){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();
+};
+
+class Swordman:public warrior, public Reiki
+{
+    public:
+    Swordman():warrior(5),Reiki(){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();
+};
+
+class Hypnotist:public archer, public Reiki
+{
+    public:
+    Hypnotist():archer(6),Reiki(){}
     virtual void done(std::vector<std::vector<int>> position);
     virtual void show();
     virtual void levelUp();

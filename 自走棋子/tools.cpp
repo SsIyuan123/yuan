@@ -2,6 +2,7 @@
 #include<iostream>
 #include <random> 
 #include<ctime>
+#include<iomanip>
 
 int edge(int a, int min, int max)
 {
@@ -43,11 +44,12 @@ int getSwitchNum(int a)
 
 int random(int min, int max)
 {
-        // 使用当前时间作为随机数种子，确保每次运行生成的随机数不同
-    std::mt19937 rng(std::time(nullptr));
-    
-    // 定义生成随机数的范围
-    std::uniform_int_distribution<int> uni(min, max);
+    // 定义静态随机数生成器和分布
+    static std::mt19937 rng(std::time(nullptr)); // 使用静态变量保持随机数种子
+    static std::uniform_int_distribution<int> uni;
+
+    // 设置分布的范围
+    uni.param(std::uniform_int_distribution<int>::param_type(min, max));
 
     // 返回生成的随机数
     return uni(rng);
@@ -88,14 +90,33 @@ float cifang(float x, int cifang)
 int Up_quzheng(float x)
 {
     int tem=x;
+    if(tem==x)
+    return tem;
+    else
     return ++tem;;
 }
 
-int Include(int x, std::vector<int> a)
+void toEnter(int x)
 {
-    int flag=0;
-    for(int i=0;i<a.size();i++)
-        if(x==a[i])
-            flag=1;
-    return flag;
+    for(int i=0;i<x;i++)
+        std::cout<<std::endl;
+}
+
+char lower(char a)
+{
+    if(a<='Z'&&a>='A')
+        a+='a'-'A';
+    return a;
+}
+
+void fengexian(int start, int end, int step, int internal)
+{
+    toEnter(internal-1);
+    for(int i=0;i<(end-start)/step;i++)
+    {
+        std::cout<<"_";
+        for(int j=0;j<step-1;j++)
+            std::cout<<" ";
+    }
+    toEnter(internal);
 }

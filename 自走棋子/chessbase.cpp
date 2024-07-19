@@ -59,7 +59,7 @@ void soldier::checkState(int x, int y, int num)
                 case 3:
                 {
                     if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
-                        addindex(0,0,-MyState.getInfo().second[0][i]);
+                        addindex(0,0,MyState.getInfo().second[0][i]);
                     break;
                 }
                 case 4:
@@ -162,7 +162,7 @@ void soldier::checkState(int x, int y, int num)
                     case 3:
                     {
                         if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
-                            addindex(0,0,-BearState.getInfo().second[0][i]);
+                            addindex(0,0,BearState.getInfo().second[0][i]);
                         break;
                     }
                     case 4:
@@ -244,10 +244,10 @@ void soldier::makerecord(int zhenying, int x, int y, soldierState a, int strengt
 
 State soldier::recordRun()//meixiewan
 {
-    std::cout<<"recordRun!"<<std::endl;
+    // std::cout<<"recordRun!"<<std::endl;
     State tem=record;
     record.clear();
-    std::cout<<"recordRun ends!"<<std::endl;
+    // std::cout<<"recordRun ends!"<<std::endl;
     return tem;
 }
 
@@ -282,9 +282,9 @@ int* soldier::getInfo()
 
 void soldier::show()
 {
-    std::cout<<"Hp:"<<Hp<<"/"<<MaxHp<<std::setw(10)<<"rage:"<<rage<<std::setw(10)<<"missrate:"<<missrate<<std::setw(10)<<"harm:"<<harm<<std::endl;
-    std::cout<<"defense:"<<defense<<std::setw(10)<<"shield:"<<shield<<std::setw(10)<<"level:"<<level<<std::setw(10)<<"freedom:"<<freedom<<std::endl;
-    std::cout<<"speed:"<<speed<<std::setw(10)<<"range:"<<range<<std::setw(10)<<"type:"<<type<<std::setw(10)<<"reBound:"<<reBound<<std::endl;
+    std::cout<<"Hp: "<<Hp<<"/"<<MaxHp<<std::right<<std::setw(20)<<"rage: "<<rage<<std::right<<std::setw(20)<<"missrate: "<<missrate<<std::right<<std::setw(20)<<"harm: "<<harm;toEnter(2);
+    std::cout<<"defense :"<<defense<<std::right<<std::setw(20)<<"shield: "<<shield<<std::right<<std::setw(20)<<"level: "<<level<<std::right<<std::setw(20)<<"freedom: "<<freedom;toEnter(2);
+    std::cout<<"speed: "<<speed<<std::right<<std::setw(20)<<"range: "<<range<<std::right<<std::setw(20)<<"warname: "<<type<<std::right<<std::setw(20)<<"reBound:"<<reBound;toEnter(2);
     MyState.show();
 }
 
@@ -310,9 +310,9 @@ State::State(const State&tem)
 
 void State::show()
 {
-    std::cout<<"amount:"<<a.size()<<std::endl;
+    // std::cout<<"amount:"<<a.size()<<std::endl;
     for(int i=0;i<a.size();i++)
-        std::cout<<"Type:"<<a[i]<<std::setw(10)<<"Strength:"<<strength[i]<<std::setw(10)<<"Duration:"<<duration[i]<<"/"<<Totalduration[i]<<std::setw(10)<<"zhenying:"<<YouOrMe[i]<<std::setw(10)<<"FrontlinePosition:("<<position[0][i]<<","<<position[1][i]<<")"<<std::endl;
+    {std::cout<<"Type:"<<a[i]<<std::setw(10)<<"Strength:"<<strength[i]<<std::setw(10)<<"Duration:"<<duration[i]<<"/"<<Totalduration[i]<<std::setw(10)<<"zhenying:"<<YouOrMe[i]<<std::setw(10)<<"FrontlinePosition:("<<position[0][i]<<","<<position[1][i]<<")";toEnter(2);}
 }
 
 std::pair<std::vector<soldierState>,std::vector<std::vector<int>>> State::getInfo()

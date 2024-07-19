@@ -1,1 +1,1 @@
-g++ chessbase.cpp chesstype.cpp main.cpp playchess.cpp player.cpp store.cpp tools.cpp war.cpp -o demo.exe -std=c++14
+g++ chessbase.cpp chesstype.cpp main.cpp playchess.cpp player.cpp store.cpp tools.cpp troop.cpp war.cpp -o demo.exe -std=c++14 "-Wl,--stack,268435456"
