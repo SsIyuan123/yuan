@@ -16,6 +16,7 @@ class war
     void deadout();
     std::pair<std::vector<std::array<int,3>>,std::vector<std::array<int,3>>> drawDistanceMap(int a[10][5], int k, int zhenying, int xFront, int yFront);
     void moveOrAttack(int zhenying, int x, int y);
+    void chaos_moveOrAttack(int zhenying, int x, int y);
     void effects(int number, int x, int y);
     void running();
     std::vector<player*> A;

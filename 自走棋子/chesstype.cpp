@@ -89,18 +89,19 @@ std::vector<int> Reiki::ReikiInfo(){
 void ParticleWarrior::done(std::vector<std::vector<int>> position)
 {
     std::cout<<"The Particle-Warrior attacks!"<<std::endl;
-    if(getInfo()[7]==0) return;
-    if(getInfo()[1]!=100)
+    int *Info=getInfo();
+    if(Info[7]==0) {std::cout<<"dizzied";toEnter(2);delete[]Info;return;}
+    if(Info[1]!=100)
     {
         if(showstate()==0)
         {
-            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,getInfo()[3],1),changeparticle(getDelta());
-            changeMyState(7,Up_quzheng(getInfo()[3]*position[3][0]/100.0),1);
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,Info[3],1),changeparticle(getDelta());
+            changeMyState(7,Up_quzheng(Info[3]*position[3][0]/100.0),1);
         }
         else
         {
-            changeMyState(4,3+getInfo()[6]*2,1);
-            changeMyState(2,getInfo()[3]*((double)getInfo()[6]/2.0+0.5),1);
+            changeMyState(4,3+Info[6]*2,1);
+            changeMyState(2,Info[3]*((double)Info[6]/2.0+0.5),1);
             changeparticle(-1000);
             switchstate();
         }
@@ -110,10 +111,12 @@ void ParticleWarrior::done(std::vector<std::vector<int>> position)
     }
     else
     {
-        addindex(getInfo()[8]/3);
+        addindex(Info[8]/3);
         addindex(0,-100);
         changeMyState(2,2,2);
     }
+    delete[]Info;
+    return;
     // std::cout<<"attack ends."<<std::endl;
 }
 
@@ -137,20 +140,21 @@ void ParticleWarrior::levelUp()
 void LaserArcher::done(std::vector<std::vector<int>> position)
 {
     std::cout<<"The Laser-Archer attacks!"<<std::endl;
-    if(getInfo()[7]==0) {std::cout<<"dizzied"<<std::endl;return;}
-    if(getInfo()[1]!=100)
+    int*Info=getInfo();
+    if(Info[7]==0) {std::cout<<"dizzied";toEnter(2);delete[]Info;return;}
+    if(Info[1]!=100)
     {
         if(showstate()==0)
         {
-            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,getInfo()[3],1),changeparticle(getDelta());
-            changeMyState(7,Up_quzheng(getInfo()[3]*position[3][0]/100.0),1);
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,Info[3],1),changeparticle(getDelta());
+            changeMyState(7,Up_quzheng(Info[3]*position[3][0]/100.0),1);
         }
         else
         {
-            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)1,4000+2000*getInfo()[6],1);
-            changeMyState(1,Up_quzheng((4000+2000*getInfo()[6])*position[3][0]/100.0),1);
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)1,4000+2000*Info[6],1);
+            changeMyState(1,Up_quzheng((4000+2000*Info[6])*position[3][0]/100.0),1);
             float k;
-            switch(getInfo()[6])
+            switch(Info[6])
             {
                 case 1:k=0.5;break;
                 case 2:k=0.65;break;
@@ -158,24 +162,28 @@ void LaserArcher::done(std::vector<std::vector<int>> position)
             }
             for(int i=0;i<position[0].size();i++)
             {
-                makerecord(position[2][i],position[0][i],position[1][i],(soldierState)7,Up_quzheng(getInfo()[3]*cifang(k,i)),1);
+                makerecord(position[2][i],position[0][i],position[1][i],(soldierState)7,Up_quzheng(Info[3]*cifang(k,i)),1);
             }
             for(int i=0;i<position[3].size();i++)
-                changeMyState(7,Up_quzheng(getInfo()[3]*cifang(k,i)*position[3][i]/100.0),1);
+                changeMyState(7,Up_quzheng(Info[3]*cifang(k,i)*position[3][i]/100.0),1);
             changeparticle(-1000);
             switchstate();
         }
         if(changeparticle(0)==100)
             switchstate();
-        addindex(0,getInfo()[14]);
+        addindex(0,Info[14]);
     }
     else
     {
         makerecord(position[2][0],position[0][0],position[1][0],(soldierState)6,1,1);
-        makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,getInfo()[3]*2,1);
-        changeMyState(7,Up_quzheng(getInfo()[3]*2*position[3][0]/100.0),1),changeMyState(6,1,1);
+        makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,Info[3]*2,1);
+        changeMyState(7,Up_quzheng(Info[3]*2*position[3][0]/100.0),1);
+        if(position[3][0]!=0)
+        changeMyState(6,1,1);
         addindex(0,-100);
-    }   
+    }
+    delete[] Info;   
+    return;
 }
 
 void LaserArcher::show()
@@ -198,25 +206,26 @@ void LaserArcher::levelUp()
 void ParticleEngineer::done(std::vector<std::vector<int>> position)
 {
     std::cout<<"The Particle Engineer attacks!"<<std::endl;
-    if(position[0].size()==0) {std::cout<<"Where are my leagues?"<<std::endl;return;}
-    if(getInfo()[7]==0) {std::cout<<"dizzied"<<std::endl;return;}
-    if(getInfo()[1]!=100)
+    int *Info=getInfo();
+    if(Info[7]==0) {std::cout<<"dizzied";delete[]Info;toEnter(2);return;}
+    if(position[0].size()==0) {std::cout<<"Where are my leagues?";delete[]Info;toEnter(2);return;}
+    if(Info[1]!=100)
     {
         if(showstate()==0)
         {
-            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)4,600+getInfo()[6]*200,5);
-            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)2,1+getInfo()[6],1),changeparticle(getDelta());
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)4,600+Info[6]*200,5);
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)2,1+Info[6],1),changeparticle(getDelta());
         }
         else
         {
-            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)1,-getInfo()[6],1);
-            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)2,3+getInfo()[6],1);
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)1,-Info[6],1);
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)2,3+Info[6],1);
             changeparticle(-1000);
             switchstate();
         }
         if(changeparticle(0)==100)
             switchstate();
-        addindex(0,getInfo()[14]);
+        addindex(0,Info[14]);
     }
     else
     {
@@ -225,6 +234,8 @@ void ParticleEngineer::done(std::vector<std::vector<int>> position)
         addindex(0,-100);
         addindex(0.20);
     }   
+    delete[]Info;
+    return;
 }
 
 void ParticleEngineer::levelUp()
@@ -256,33 +267,36 @@ void DimensionAssassin::levelUp()
 void DimensionAssassin::done(std::vector<std::vector<int>> position)
 {
     std::cout<<"The Dimension Assassin attacks!"<<std::endl;
-    if(getInfo()[7]==0) {std::cout<<"dizzied"<<std::endl;return;}
-    if(getInfo()[1]!=100)
+    int* Info=getInfo();
+    if(Info[7]==0) {std::cout<<"dizzied";toEnter(2);delete[]Info;return;}
+    if(Info[1]!=100)
     {
         if(showstate()==0)
         {
-            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,getInfo()[3],1),changeparticle(getDelta());
-            changeMyState(7,Up_quzheng(getInfo()[3]*position[3][0]/100.0),1);
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,Info[3],1),changeparticle(getDelta());
+            changeMyState(7,Up_quzheng(Info[3]*position[3][0]/100.0),1);
         }
         else
         {
-            changeMyState(11,50*getInfo()[6],2);
-            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,getInfo()[3],1);
-            changeMyState(7,Up_quzheng(getInfo()[3]*position[3][0]/100.0),1);
+            changeMyState(11,50*Info[6],2);
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,Info[3],1);
+            changeMyState(7,Up_quzheng(Info[3]*position[3][0]/100.0),1);
             changeparticle(-1000);
             switchstate();
         }
         if(changeparticle(0)==100)
             switchstate();
-        addindex(0,getInfo()[14]);
+        addindex(0,Info[14]);
     }
     else
     {
-        changeMyState(11,50*getInfo()[6],2);
+        changeMyState(11,50*Info[6],2);
         for(int i=1;i<position[0].size();i++)
-            makerecord(position[2][i],position[0][i],position[1][i],(soldierState)11,50*getInfo()[6],2);
+            makerecord(position[2][i],position[0][i],position[1][i],(soldierState)11,50*Info[6],2);
         addindex(0,-100);
     }  
+    delete[] Info;
+    return;
 }
 
 void DimensionAssassin::show()
@@ -323,6 +337,7 @@ void Swordman::done(std::vector<std::vector<int>> position)
     if(ReikiInfo()[0]==100||ReikiInfo()[0]==0)
         switchstate();
     delete[] Info;
+    return;
 }
 
 void Swordman::show()
@@ -356,17 +371,20 @@ void Hypnotist::done(std::vector<std::vector<int>> position)
         else
             for(int i=0;i<position[0].size();i++)
             {
-                makerecord(position[2][i],position[0][i],position[1][i],(soldierState)1,Info[3],1);
+                makerecord(position[2][i],position[0][i],position[1][i],(soldierState)1,Info[6],1);
                 makerecord(position[2][i],position[0][i],position[1][i],(soldierState)7,Info[3],1);
                 changeMyState(7,Up_quzheng(Info[3]*position[3][i]/100.0),1);
                 changeMyState(1,Up_quzheng(Info[6]*position[3][i]/100.0),1);
             }   
-        addindex(0,getInfo()[14]);
+        addindex(0,Info[14]);
     }
     else
     {
         makerecord(position[2][0],position[0][0],position[1][0],(soldierState)9,1,3);
-        changeMyState(9,1,Up_quzheng(3*position[3][0]));
+        makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,Info[3],1);
+        changeMyState(7,Up_quzheng(Info[3]*position[3][0]/100.0),1);
+        if(position[3][0]!=0)
+            changeMyState(9,1,Up_quzheng(3*position[3][0]));
         addindex(0,-100);
     }
     if(ReikiInfo()[1]==0)
@@ -376,6 +394,7 @@ void Hypnotist::done(std::vector<std::vector<int>> position)
     if(ReikiInfo()[0]==100||ReikiInfo()[0]==0)
         switchstate();
     delete[] Info;
+    return;
 }
 
 void Hypnotist::show()
@@ -392,4 +411,198 @@ void Hypnotist::levelUp()
     if(Info[6]==3)
         changeReiki(0,16);
     delete[] Info;
+}
+
+void Fulu_Painter::show()
+{
+    std::cout<<"Fulu_Painter:"<<std::endl;
+    soldier::show();
+    std::cout<<"Reiki Amount:"<<ReikiInfo()[0];toEnter(2);
+}
+
+void Fulu_Painter::levelUp()
+{
+    magician::levelUp();
+    int* Info=getInfo();
+    if(Info[6]==3)
+        changeReiki(0,16);
+    delete[] Info;
+}
+
+void Fulu_Painter::thumder_Fu(std::vector<std::vector<int>> position)
+{
+    std::cout<<"Thumder!"<<std::endl;
+    int*Info=getInfo();
+    makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,6+2*Info[6],1);
+    changeMyState(7,Up_quzheng((6+2*Info[6])*position[3][0]/100.0),1);
+    changeReiki(-34);
+    delete[] Info;
+}
+
+void Fulu_Painter::wind_Fu(std::vector<std::vector<int>> position)
+{
+    std::cout<<"Wind!"<<std::endl;
+    int* Info=getInfo();
+    for(int i=position[0].size()-1;i>=0;i--)
+        if(position[2][i]==position[2][position[0].size()-1])
+            makerecord(position[2][i],position[0][i],position[1][i],(soldierState)3,5+Info[6]*5,1);
+    changeReiki(-34);
+    delete[] Info;
+}
+
+void Fulu_Painter::vine_Fu(std::vector<std::vector<int>> position)
+{
+    std::cout<<"vine!"<<std::endl;
+    int* Info=getInfo();
+    makerecord(position[2][0],position[0][0],position[1][0],(soldierState)12,3+2*Info[6],1);
+    changeMyState(12,Up_quzheng((3+2*Info[6])*position[3][0]/100.0),1);
+    changeReiki(-34);
+    delete[] Info;
+}
+
+void Fulu_Painter::quake_Fu(std::vector<std::vector<int>> position)
+{
+    std::cout<<"quake!"<<std::endl;
+    int* Info=getInfo();
+    for(int i=0;i<position[0].size();i++)
+        if(position[2][i]==position[2][0])
+        {
+            makerecord(position[2][i],position[0][i],position[1][i],(soldierState)7,3+Info[6],1);
+            changeMyState(7,Up_quzheng((3+Info[6])*position[3][i]/100.0),1);
+        }
+    changeReiki(-34);
+    delete[] Info;
+}
+
+void Fulu_Painter::fire_Fu(std::vector<std::vector<int>> position)
+{
+    std::cout<<"fire!"<<std::endl;
+    int*Info=getInfo();
+    makerecord(position[2][0],position[0][0],position[1][0],(soldierState)5,3+Info[6],2);
+    changeMyState(5,Up_quzheng((3+Info[6])*position[3][0]/100.0),2);
+    changeReiki(-34);
+    delete[] Info;
+}
+
+void Fulu_Painter::Rage_Fu(std::vector<std::vector<int>> position)
+{
+    std::cout<<"Rage!"<<std::endl;
+    int*Info=getInfo();
+    for(int i=0;i<position[0].size();i++)
+        if(position[2][i]==position[2][position[0].size()])
+        {makerecord(position[2][i],position[0][i],position[1][i],(soldierState)8,40,1);break;}
+    changeMyState(5,Up_quzheng((3+Info[6])*position[3][0]/100.0),2);
+    changeReiki(-34);
+    delete[] Info;
+}
+
+void Fulu_Painter::done(std::vector<std::vector<int>> position)
+{
+    std::cout<<"The Fulu Painter attacks!"<<std::endl;
+    int* Info=getInfo();
+    if(Info[7]==0) {delete[]Info;return;}
+    if(Info[1]!=100)
+    {
+        if(ReikiInfo()[1]==0)
+        {
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,Info[3],1);
+            changeMyState(7,Up_quzheng(Info[3]*position[3][0]/100.0),1);
+        }
+        else
+        {
+            int ran=random(0,108);
+            switch(ran%6)
+            {
+                case 0:thumder_Fu(position);break;
+                case 1:wind_Fu(position);break;
+                case 2:vine_Fu(position);break;
+                case 3:quake_Fu(position);break;
+                case 4:fire_Fu(position);break;
+                case 5:Rage_Fu(position);break;
+            }
+        }
+        addindex(0,Info[14]);
+    }
+    else
+    {
+        for(int i=0;i<3;i++)
+        {
+            int ran=random(0,108);
+            switch(ran%6)
+            {
+                case 0:thumder_Fu(position);break;
+                case 1:wind_Fu(position);break;
+                case 2:vine_Fu(position);break;
+                case 3:quake_Fu(position);break;
+                case 4:fire_Fu(position);break;
+                case 5:Rage_Fu(position);break;
+            }
+            addindex(0,-100);
+        }
+    }
+    if(ReikiInfo()[1]==0)
+        changeReiki(ReikiInfo()[2]);
+    if(ReikiInfo()[0]==100&&ReikiInfo()[1]==0||(ReikiInfo()[0]==0&&ReikiInfo()[1]==1))
+        switchstate();
+    delete[] Info;
+    return;   
+}
+
+void Sorcerer::show()
+{
+    std::cout<<"Sorcerer:"<<std::endl;
+    soldier::show();
+    std::cout<<"Reiki Amount:"<<ReikiInfo()[0];toEnter(2);
+}
+
+void Sorcerer::levelUp()
+{
+    assassin::levelUp();
+    int* Info=getInfo();
+    if(Info[6]==3)
+        changeReiki(0,16);
+    delete[] Info;
+}
+
+void Sorcerer::done(std::vector<std::vector<int>> position)
+{
+    std::cout<<"The Sorcerer attacks!"<<std::endl;
+    int* Info=getInfo();
+    if(Info[7]==0) {delete[]Info;return;}
+    if(Info[1]!=100)
+    {
+        makerecord(position[2][0],position[0][0],position[1][0],(soldierState)7,Info[3],1);
+        changeMyState(7,Up_quzheng(Info[3]*position[3][0]/100.0),1);
+        addindex(0,getInfo()[14]);
+    }
+    else
+    {
+        addindex(-5);
+        if(int ran=random()<50)
+        {
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)5,5000,1);
+            changeMyState(5,5000*position[3][0]/100.0,1);
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)10,Info[0]*position[3][0]/100.0,1);
+            changeMyState(9,1,3);
+        }
+        addindex(0,-100);
+    }
+    if(ReikiInfo()[1]==0)
+        changeReiki(ReikiInfo()[2]);
+    else
+    {
+        makerecord(position[2][0],position[0][0],position[1][0],(soldierState)5,Info[6],2);
+        changeMyState(5,Up_quzheng(Info[6]*position[3][0]/100.0),2);
+        if(random()<20+10*Info[6])
+        {
+            makerecord(position[2][0],position[0][0],position[1][0],(soldierState)6,1,1);
+            if(position[3][0]>0)
+                changeMyState(6,1,1);
+        }
+        changeReiki(-34);
+    }
+    if(ReikiInfo()[0]==100||ReikiInfo()[0]==0)
+        switchstate();
+    delete[] Info;
+    return;
 }

@@ -31,6 +31,7 @@ void soldier::checkState(int x, int y, int num)
                         break;
                     }
                     case 6:switching(&freedom);break;
+                    case 9:switching(&chaos);break;
                     case 11:addindex(0,0,0,0,0,0,0,0,0,0,-MyState.getInfo().second[0][i]);break;
                     default:break;
                 }
@@ -73,7 +74,14 @@ void soldier::checkState(int x, int y, int num)
                     }
                     break;
                 }
-                case 5:addindex(-MyState.getInfo().second[0][i]);break;
+                case 5:
+                {
+                    if(MyState.getInfo().second[0][i]>=100)
+                        addindex(-MyState.getInfo().second[0][i]*MaxHp/10000.0);
+                    else
+                        addindex(-MyState.getInfo().second[0][i]);
+                    break;
+                }
                 case 7:
                 {
                     if(random()<missrate)
@@ -95,10 +103,22 @@ void soldier::checkState(int x, int y, int num)
                         switching(&freedom);
                     break;
                 }
+                case 9:
+                {
+                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
+                        switching(&chaos);
+                    break;
+                }
                 case 11:
                 {
                     if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
                         addindex(0,0,0,0,0,0,0,0,0,0,MyState.getInfo().second[0][i]);
+                    break;
+                }
+                case 12:
+                {
+                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
+                        addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,MyState.getInfo().second[0][i]);
                     break;
                 }
                 default:break;
@@ -131,7 +151,13 @@ void soldier::checkState(int x, int y, int num)
                                 addindex(0,0,0,0,0,-BearState.getInfo().second[0][i]);
                             break;
                         }
+                        case 5:
+                        {
+                            if(BearState.getInfo().second[0][i]>=100)
+                                makerecord(BearState.getInfo().second[2][i],BearState.getInfo().second[3][i],BearState.getInfo().second[4][i],(soldierState)10,BearState.getInfo().second[0][i]*MaxHp/10000.0,1);
+                        }
                         case 6:switching(&freedom);break;
+                        case 9:switching(&chaos);break;
                         case 11:addindex(0,0,0,0,0,0,0,0,0,0,-BearState.getInfo().second[0][i]);break;
                         default:break;
                     }
@@ -176,7 +202,14 @@ void soldier::checkState(int x, int y, int num)
                         }
                         break;
                     }
-                    case 5:addindex(-BearState.getInfo().second[0][i]);break;
+                    case 5:
+                    {
+                        if(BearState.getInfo().second[0][i]>=100)
+                            addindex(-BearState.getInfo().second[0][i]*MaxHp/10000.0);
+                        else
+                            addindex(-BearState.getInfo().second[0][i]);
+                        break;
+                    }
                     case 7:
                     {
                         if(random()<missrate)
@@ -206,11 +239,22 @@ void soldier::checkState(int x, int y, int num)
                         break;
                     }
                     case 8:addindex(0,BearState.getInfo().second[0][i]);break;
+                    case 9:
+                    {
+                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
+                            switching(&chaos);
+                        break;
+                    }
                     case 11:
                     {
                         if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
                             addindex(0,0,0,0,0,0,0,0,0,0,BearState.getInfo().second[0][i]);
                         break;
+                    }
+                    case 12:
+                    {
+                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
+                            addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,BearState.getInfo().second[0][i]);
                     }
                     default:break;
                     
@@ -220,7 +264,7 @@ void soldier::checkState(int x, int y, int num)
     }   
 }
 
-void soldier::addindex(int Hp, int rage, int missrate, int harm, int defense, int shield, int level, int MaxHp, int speed, int range, int reBound, int Maxdefense, int rageUp)
+void soldier::addindex(int Hp, int rage, int missrate, int harm, int defense, int shield, int level, int MaxHp, int speed, int range, int reBound, int Maxdefense, int rageUp, int vine)
 {
     this->Hp=edge(this->Hp+Hp,0,this->MaxHp);
     this->shield=edgeleft(this->shield+shield,0);
@@ -235,6 +279,7 @@ void soldier::addindex(int Hp, int rage, int missrate, int harm, int defense, in
     this->reBound=edgeleft(this->reBound+reBound,0);
     this->Maxdefense=edgeleft(this->Maxdefense+Maxdefense,0);
     this->rageUp+=rageUp;
+    this->vine=edgeleft(this->vine+vine,0);
 }
 
 void soldier::makerecord(int zhenying, int x, int y, soldierState a, int strength, int duration)
@@ -261,7 +306,7 @@ void soldier::changeMyState(int a, int strength, int duration, int x, int y, int
 
 int* soldier::getInfo()
 {
-    int* Info = new int[15];
+    int* Info = new int[17];
     Info[0]=Hp,
     Info[1]=rage,
     Info[2]=missrate,
@@ -277,6 +322,8 @@ int* soldier::getInfo()
     Info[12]=Maxdefense;
     Info[13]=reBound;
     Info[14]=rageUp;
+    Info[15]=chaos;
+    Info[16]=vine;
     return Info;
 }
 
@@ -285,6 +332,7 @@ void soldier::show()
     std::cout<<"Hp: "<<Hp<<"/"<<MaxHp<<std::right<<std::setw(20)<<"rage: "<<rage<<std::right<<std::setw(20)<<"missrate: "<<missrate<<std::right<<std::setw(20)<<"harm: "<<harm;toEnter(2);
     std::cout<<"defense :"<<defense<<std::right<<std::setw(20)<<"shield: "<<shield<<std::right<<std::setw(20)<<"level: "<<level<<std::right<<std::setw(20)<<"freedom: "<<freedom;toEnter(2);
     std::cout<<"speed: "<<speed<<std::right<<std::setw(20)<<"range: "<<range<<std::right<<std::setw(20)<<"warname: "<<type<<std::right<<std::setw(20)<<"reBound:"<<reBound;toEnter(2);
+    std::cout<<"chaos: "<<chaos;toEnter(2);
     MyState.show();
 }
 

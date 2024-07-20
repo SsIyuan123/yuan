@@ -97,7 +97,17 @@ void war::effects(int number, int x, int y)
     Zhongzhuan.show();
     if(Zhongzhuan.getInfo().first[0]!=(soldierState)0)
         for(int i=0;i<Zhongzhuan.getInfo().second[0].size();i++)
-            A[Zhongzhuan.getInfo().second[2][i]]->MyTroop()->MyCondition()[Zhongzhuan.getInfo().second[3][i]][Zhongzhuan.getInfo().second[4][i]].getInfo().second->changeMyState(Zhongzhuan.getInfo().first[i],Zhongzhuan.getInfo().second[0][i],Zhongzhuan.getInfo().second[1][i],x,y,number);
+        {
+            if(Zhongzhuan.getInfo().first[i]!=(soldierState)7)
+                A[Zhongzhuan.getInfo().second[2][i]]->MyTroop()->MyCondition()[Zhongzhuan.getInfo().second[3][i]][Zhongzhuan.getInfo().second[4][i]].getInfo().second->changeMyState(Zhongzhuan.getInfo().first[i],Zhongzhuan.getInfo().second[0][i],Zhongzhuan.getInfo().second[1][i],x,y,number);
+            else
+            {
+                if(A[number]->MyTroop()->MyCondition()[x][y].getInfo().second->getInfo()[16]>0)//有藤蔓必须先打碎藤蔓
+                    A[number]->MyTroop()->MyCondition()[x][y].getInfo().second->addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,-Zhongzhuan.getInfo().second[0][i]);
+                else
+                    A[Zhongzhuan.getInfo().second[2][i]]->MyTroop()->MyCondition()[Zhongzhuan.getInfo().second[3][i]][Zhongzhuan.getInfo().second[4][i]].getInfo().second->changeMyState(Zhongzhuan.getInfo().first[i],Zhongzhuan.getInfo().second[0][i],Zhongzhuan.getInfo().second[1][i],x,y,number);
+            }
+        }
     // std::cout<<"effects end"<<std::endl;
 }
 
@@ -228,13 +238,15 @@ void war::moveOrAttack(int zhenying, int xFront, int yFront)
                 k=MakeDistance(a,zhenying,WarPosition[i][j].getInfo().first[5],WarPosition[i][j].getInfo().first[6]),xWar=WarPosition[i][j].getInfo().first[5],yWar=WarPosition[i][j].getInfo().first[6];
     std::pair<std::vector<std::array<int,3>>,std::vector<std::array<int,3>>> zhongzhuan=drawDistanceMap(a,k,zhenying,xFront,yFront);
     std::vector<std::array<int,3>> distance=zhongzhuan.first,league=zhongzhuan.second;
+    if(A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().second->getInfo()[15]==1&&random()<50)
+    {std::cout<<"i am crazy"<<std::endl;chaos_moveOrAttack(zhenying,xFront,yFront);return;}
     if(A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().first[1]==3)
     {
-        std::vector<int> xx,yy,zz;
+        std::vector<int> xx,yy,zz,rebound;
         for(int i=0;i<league.size();i++)
-            xx.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[3]),yy.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[4]),zz.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[2]);
+            xx.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[3]),yy.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[4]),zz.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[2]),rebound.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().second->getInfo()[13]);
         std::vector<std::vector<int>> tem;
-        tem.push_back(xx),tem.push_back(yy),tem.push_back(zz);
+        tem.push_back(xx),tem.push_back(yy),tem.push_back(zz),tem.push_back(rebound);
         A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().second->done(tem);
         effects(zhenying,xFront,yFront);
         return;
@@ -280,13 +292,35 @@ void war::moveOrAttack(int zhenying, int xFront, int yFront)
             {
                 int map[10][5];
                 MakeDistance(map,getSwitchNum(zhenying),distance[0][1],distance[0][2]);
-                for(int i=1;i<distance.size();i++)
+                for(int i=0;i<distance.size();i++)
                     if(map[distance[i][1]][distance[i][2]]<=1)
                     {
                         xx.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[3]),yy.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[4]),zz.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[2]);
                         rebound.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().second->getInfo()[13]);
                     }
+                break;
             }
+            case 7:
+            {
+                for(int i=0;i<distance[0].size();i++)
+                {
+                    xx.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[3]),yy.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[4]),zz.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[2]);
+                    rebound.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().second->getInfo()[13]);
+                }
+                for(int i=0;i<league[0].size();i++)
+                {
+                    xx.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[3]),yy.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[4]),zz.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[2]);
+                    rebound.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().second->getInfo()[13]);
+                }
+                break;
+            }
+            case 8:
+            {
+                xx.push_back(WarPosition[distance[0][1]][distance[0][2]].getInfo().first[3]),yy.push_back(WarPosition[distance[0][1]][distance[0][2]].getInfo().first[4]),zz.push_back(WarPosition[distance[0][1]][distance[0][2]].getInfo().first[2]);
+                rebound.push_back(WarPosition[distance[0][1]][distance[0][2]].getInfo().second->getInfo()[13]);
+                break;
+            }
+
         }
         std::vector<std::vector<int>> tem;
         tem.push_back(xx),tem.push_back(yy),tem.push_back(zz),tem.push_back(rebound);
@@ -323,6 +357,137 @@ void war::moveOrAttack(int zhenying, int xFront, int yFront)
                         return;
                     }
 
+    }
+}
+
+void war::chaos_moveOrAttack(int zhenying, int xFront, int yFront)
+{
+    int a[10][5],k,xWar,yWar;
+    for(int i=0;i<10;i++)
+        for(int j=0;j<5;j++)
+            if(WarPosition[i][j].getInfo().first[2]==zhenying&&WarPosition[i][j].getInfo().first[3]==xFront&&WarPosition[i][j].getInfo().first[4]==yFront)
+                k=MakeDistance(a,zhenying,WarPosition[i][j].getInfo().first[5],WarPosition[i][j].getInfo().first[6]),xWar=WarPosition[i][j].getInfo().first[5],yWar=WarPosition[i][j].getInfo().first[6];
+    std::pair<std::vector<std::array<int,3>>,std::vector<std::array<int,3>>> zhongzhuan=drawDistanceMap(a,k,zhenying,xFront,yFront);
+    std::vector<std::array<int,3>> distance=zhongzhuan.first,league=zhongzhuan.second;
+    if(A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().first[1]==3)
+    {
+        std::vector<int> xx,yy,zz,rebound;
+        for(int i=0;i<distance.size();i++)
+            xx.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[3]),yy.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[4]),zz.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[2]),rebound.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().second->getInfo()[13]);
+        std::vector<std::vector<int>> tem;
+        tem.push_back(xx),tem.push_back(yy),tem.push_back(zz),tem.push_back(rebound);
+        A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().second->done(tem);
+        effects(zhenying,xFront,yFront);
+        return;
+    }
+    if(league.size()>0)
+    {
+        if(league[0][0]<=A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().second->getInfo()[10])
+        {
+            std::vector<int> xx,yy,zz,rebound;
+            switch(A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().first[1])
+            {
+                case 1:
+                {
+                    xx.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[3]),yy.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[4]),zz.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[2]);
+                    rebound.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().second->getInfo()[13]);
+                    break;
+                }
+                case 2:
+                {
+                    xx.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[3]),yy.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[4]),zz.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[2]);
+                    rebound.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().second->getInfo()[13]);
+                    for(int i=0;i<league.size();i++)
+                        if(i>0&&(yWar-league[i][2])*(xWar-league[0][1])==(xWar-league[i][1])*(yWar-league[0][2]))
+                        {
+                            xx.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[3]),yy.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[4]),zz.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[2]);
+                            rebound.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().second->getInfo()[13]);
+                        }
+                    break;
+                }
+                case 4:
+                {
+                    xx.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[3]),yy.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[4]),zz.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[2]);
+                    rebound.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().second->getInfo()[13]);
+                    for(int i=0;i<distance.size();i++)
+                        xx.push_back(WarPosition[distance[0][1]][distance[0][2]].getInfo().first[3]),yy.push_back(WarPosition[distance[0][1]][distance[0][2]].getInfo().first[4]),zz.push_back(WarPosition[distance[0][1]][distance[0][2]].getInfo().first[2]);
+                    break;
+                }
+                case 5:
+                {
+                    xx.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[3]),yy.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[4]),zz.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[2]);
+                    rebound.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().second->getInfo()[13]);
+                    break;
+                }
+                case 6:
+                {
+                    int map[10][5];
+                    MakeDistance(map,getSwitchNum(zhenying),league[0][1],league[0][2]);
+                    for(int i=0;i<league.size();i++)
+                        if(map[league[i][1]][league[i][2]]<=1)
+                        {
+                            xx.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[3]),yy.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[4]),zz.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[2]);
+                            rebound.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().second->getInfo()[13]);
+                        }
+                    break;
+                }
+                case 7:
+                {
+                    for(int i=0;i<league[0].size();i++)
+                    {
+                        xx.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[3]),yy.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[4]),zz.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().first[2]);
+                        rebound.push_back(WarPosition[league[i][1]][league[i][2]].getInfo().second->getInfo()[13]);
+                    }
+                    for(int i=0;i<distance[0].size();i++)
+                    {
+                        xx.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[3]),yy.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[4]),zz.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().first[2]);
+                        rebound.push_back(WarPosition[distance[i][1]][distance[i][2]].getInfo().second->getInfo()[13]);
+                    }
+                    break;
+                }
+                case 8:
+                {
+                    xx.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[3]),yy.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[4]),zz.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().first[2]);
+                    rebound.push_back(WarPosition[league[0][1]][league[0][2]].getInfo().second->getInfo()[13]);
+                    break;
+                }
+            }
+            std::vector<std::vector<int>> tem;
+            tem.push_back(xx),tem.push_back(yy),tem.push_back(zz),tem.push_back(rebound);
+            A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().second->done(tem);
+            effects(zhenying,xFront,yFront);
+        }
+        else
+        {
+            std::cout<<"Type "<<A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().first[1]<<" soldier owned by "<<A[zhenying]->Getinfo().first[0]<<" move from ("<<xWar<<","<<yWar<<") to";
+            int b[10][5];
+            MakeDistance(b,WarPosition[league[0][1]][league[0][2]].getInfo().first[2],WarPosition[league[0][1]][league[0][2]].getInfo().first[5],WarPosition[league[0][1]][league[0][2]].getInfo().first[6]);
+            for(int i=0;i<10;i++)
+                for(int j=0;j<5;j++)
+                    if(a[i][j]==0)
+                    {WarPosition[i][j].go();break;}
+            if(league[0][0]>A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().second->getInfo()[9])
+            {
+                for(int i=0;i<10;i++)
+                    for(int j=0;j<5;j++)
+                        if(b[i][j]==league[0][0]-A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().second->getInfo()[9]&&a[i][j]==A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().second->getInfo()[9]&&WarPosition[i][j].getInfo().first[0]==0)
+                        {
+                            WarPosition[i][j].input(A[zhenying]->MyTroop()->MyCondition()[xFront][yFront],zhenying,i,j);
+                            std::cout<<" ("<<i<<","<<j<<")"<<std::endl;
+                            return;
+                        }
+            }
+            else
+                for(int i=0;i<10;i++)
+                    for(int j=0;j<5;j++)
+                        if(b[i][j]==1&&WarPosition[i][j].getInfo().first[0]==0&&a[i][j]<A[zhenying]->MyTroop()->MyCondition()[xFront][yFront].getInfo().second->getInfo()[9])
+                        {
+                            WarPosition[i][j].input(A[zhenying]->MyTroop()->MyCondition()[xFront][yFront],zhenying,i,j);
+                            std::cout<<" ("<<i<<","<<j<<")"<<std::endl;
+                            return;
+                        }
+
+        }
     }
 }
 

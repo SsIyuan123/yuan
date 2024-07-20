@@ -10,7 +10,9 @@ enum soldiers
     particleengineer=3,
     dimensionassassin=4,
     swordman=5,
-    hypnotist=6
+    hypnotist=6,
+    fulu_drawer=7,
+    sorcerer=8,
 };
 
 enum soldierState
@@ -26,7 +28,8 @@ enum soldierState
     rageup=8,
     chaos=9,
     Hpup=10,
-    rebound=11
+    rebound=11,
+    vine=12
 };
 
 class State
@@ -52,16 +55,17 @@ class State
 class soldier
 {
     public:
-    soldier(int Hp=0,int rage=0, int missrate=0, int harm=5, int defense=1, int shield=0, int level=0, int freedom=0, int MaxHp=1, int speed=1, int range=0,int type=0, int Maxdefense=0, int reBound=0, int rageUp = 0):
+    soldier(int Hp=0,int rage=0, int missrate=0, int harm=5, int defense=1, int shield=0, int level=0, int freedom=0, int MaxHp=1, int speed=1, int range=0,int type=0, int Maxdefense=0, int reBound=0, int rageUp = 0, int chaos = 0, int vine = 0):
         Hp(Hp),harm(harm),defense(defense),
         missrate(missrate),level(level),type((soldiers)type),
         rage(rage),shield(shield),freedom(freedom),reBound(reBound),
         MaxHp(MaxHp),speed(speed),range(range),
-        Maxdefense(Maxdefense),rageUp(rageUp){}
+        Maxdefense(Maxdefense),rageUp(rageUp),chaos(chaos),
+        vine(vine){}
     virtual void done(std::vector<std::vector<int>> position) = 0;//number,line,row,camp
     virtual void levelUp() = 0;
     void checkState(int x = 10, int y = 10, int num = 0);//x,y是目前正结算的单位位置，num是相对阵营，无参数使用时默认操作MyState
-    void addindex(int Hp = 0, int rage = 0, int missrate = 0, int harm = 0, int defense = 0, int shield = 0, int level = 0, int MaxHp = 0, int speed = 0, int range = 0, int reBound = 0, int Maxdefense = 0, int rageUp = 0);
+    void addindex(int Hp = 0, int rage = 0, int missrate = 0, int harm = 0, int defense = 0, int shield = 0, int level = 0, int MaxHp = 0, int speed = 0, int range = 0, int reBound = 0, int Maxdefense = 0, int rageUp = 0,int vine = 0);
     void makerecord(int zhenying, int x, int y, soldierState a, int strength, int duration);
     State recordRun();
     void changeMyState(int a, int strength, int duration, int x = 10, int y = 10, int zhenying = 0);
@@ -86,6 +90,8 @@ class soldier
     int Maxdefense;
     int reBound;
     int rageUp;
+    int chaos;
+    int vine;
 };
 
 #endif

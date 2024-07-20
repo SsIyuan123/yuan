@@ -155,4 +155,26 @@ class Hypnotist:public archer, public Reiki
     virtual void levelUp();
 };
 
+class Fulu_Painter:public magician,public Reiki
+{
+    Fulu_Painter():magician(7),Reiki(){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();
+    void thumder_Fu(std::vector<std::vector<int>> position);
+    void wind_Fu(std::vector<std::vector<int>> position);
+    void quake_Fu(std::vector<std::vector<int>> position);
+    void fire_Fu(std::vector<std::vector<int>> position);
+    void vine_Fu(std::vector<std::vector<int>> position);
+    void Rage_Fu(std::vector<std::vector<int>> position);
+};
+
+class Sorcerer:public assassin, public Reiki
+{
+    Sorcerer():assassin(8),Reiki(){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();
+};
+
 #endif

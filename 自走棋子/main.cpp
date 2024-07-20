@@ -13,9 +13,13 @@ int main() {
 
     player a(1,"Sy");
     player b(2,"yy");
-    DimensionAssassin Kevin,AA;
+    Hypnotist Kevin,AA;
+    ParticleWarrior Rihanna,AiMee;
     Swordman yy,aa;
+    ParticleEngineer amy;
     a.MyTroop()->testOnFront(&yy,1,1);
+    a.MyTroop()->testOnFront(&amy,1,3);
+    b.MyTroop()->testOnFront(&AiMee,0,1);
     b.MyTroop()->testOnFront(&AA,0,0);
     std::vector<player*> GreatWar={&a,&b};
     war testwar(GreatWar,0);
@@ -25,9 +29,7 @@ int main() {
     
     // mainchess.determinePeopleAmount();
     // mainchess.WriteA();
-    // ParticleWarrior Rihanna,AiMee;
     // LaserArcher Taylor,Betty;
-    // ParticleEngineer amy;
     // mainchess.allPlayer[0].MyTroop()->gota(&Taylor);
     // mainchess.allPlayer[0].MyTroop()->gota(&Kevin);
     // mainchess.allPlayer[0].MyTroop()->turnOnFrontline();

@@ -22,7 +22,7 @@ void store::generateSoldier()
     soldier** tmp=new soldier*[4];
     for(int i=0;i<WindowNum;i++)
     {
-        int ran=random(0,95);
+        int ran=random(0,96);
         int money=3;
         switch(ran%4)
         {
