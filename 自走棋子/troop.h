@@ -36,7 +36,7 @@ class troop
     void gota(soldier *newsoldier);
     std::pair<std::vector<std::pair<int,soldier*>>,int*> GetInfo();
     int getAlive();
-
+    void allinformation(int index);
     void showFrontline();
     void getdown();
     void turnOnFrontline();

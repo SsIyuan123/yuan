@@ -30,9 +30,18 @@ void soldier::checkState(int x, int y, int num)
                             addindex(0,0,0,0,0,-MyState.getInfo().second[0][i]);
                         break;
                     }
-                    case 6:switching(&freedom);break;
-                    case 9:switching(&chaos);break;
+                    case 6:freedom=1;break;
+                    case 9:chaos=0;break;
                     case 11:addindex(0,0,0,0,0,0,0,0,0,0,-MyState.getInfo().second[0][i]);break;
+                    case 15:
+                    {
+                        if(MyState.getInfo().second[0][i]>=100)
+                            addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-MaxHp*(double)MyState.getInfo().second[0][i]/10000.0);
+                        else
+                            addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-MyState.getInfo().second[0][i]);
+                        break;
+                    }
+                    case 16:addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-MyState.getInfo().second[0][i]);break;
                     default:break;
                 }
             }
@@ -74,18 +83,11 @@ void soldier::checkState(int x, int y, int num)
                     }
                     break;
                 }
-                case 5:
-                {
-                    if(MyState.getInfo().second[0][i]>=100)
-                        addindex(-MyState.getInfo().second[0][i]*MaxHp/10000.0);
-                    else
-                        addindex(-MyState.getInfo().second[0][i]);
-                    break;
-                }
+                case 5:addindex(-MyState.getInfo().second[0][i]);break;
                 case 7:
                 {
-                    if(random()<missrate)
-                        {std::cout<<"miss!"<<std::endl;break;}
+                    // if(random()<missrate)
+                    //     {std::cout<<"miss!"<<std::endl;break;}
                     if(shield>=MyState.getInfo().second[0][i])
                         addindex(0,0,0,0,0,-MyState.getInfo().second[0][i]);
                     else
@@ -97,18 +99,8 @@ void soldier::checkState(int x, int y, int num)
                     }
                     break;
                 }
-                case 6:
-                {
-                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
-                        switching(&freedom);
-                    break;
-                }
-                case 9:
-                {
-                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
-                        switching(&chaos);
-                    break;
-                }
+                case 6:freedom=0;break;
+                case 9:chaos=1;break;
                 case 11:
                 {
                     if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
@@ -121,6 +113,38 @@ void soldier::checkState(int x, int y, int num)
                         addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,MyState.getInfo().second[0][i]);
                     break;
                 }
+                case 13:
+                {
+                    if(MyState.getInfo().second[0][i]>=100)
+                    {
+                        makerecord(MyState.getInfo().second[2][i],MyState.getInfo().second[3][i],MyState.getInfo().second[4][i],(soldierState)10,MyState.getInfo().second[0][i]*Hp/10000.0,1);
+                        if(MyState.getInfo().second[0][i]*Hp/10000.0>=10)
+                            makerecord(MyState.getInfo().second[2][i],MyState.getInfo().second[3][i],MyState.getInfo().second[4][i],(soldierState)9,1,3);
+                        addindex(-MyState.getInfo().second[0][i]*Hp/10000.0);
+                    }
+                    else
+                        addindex(-MyState.getInfo().second[0][i]);
+                    break;
+                }
+                case 14:addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,MyState.getInfo().second[0][i]);break;
+                case 15:
+                {
+                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
+                    {
+                        if(MyState.getInfo().second[0][i]>=100)
+                            addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,MaxHp*(double)MyState.getInfo().second[0][i]/10000.0);
+                        else
+                            addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,+MyState.getInfo().second[0][i]);
+                    }
+                    break;
+                }
+                case 16:
+                {
+                    if(MyState.getInfo().second[1][i]==MyState.getInfo().second[5][i])
+                        addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,MyState.getInfo().second[0][i]);
+                    break;
+                }
+                case 17:addindex(-MyState.getInfo().second[0][i]);break;
                 default:break;
             }  
         MyState.settlement();  
@@ -151,14 +175,18 @@ void soldier::checkState(int x, int y, int num)
                                 addindex(0,0,0,0,0,-BearState.getInfo().second[0][i]);
                             break;
                         }
-                        case 5:
-                        {
-                            if(BearState.getInfo().second[0][i]>=100)
-                                makerecord(BearState.getInfo().second[2][i],BearState.getInfo().second[3][i],BearState.getInfo().second[4][i],(soldierState)10,BearState.getInfo().second[0][i]*MaxHp/10000.0,1);
-                        }
-                        case 6:switching(&freedom);break;
-                        case 9:switching(&chaos);break;
+                        case 6:freedom=1;break;
+                        case 9:chaos=0;break;
                         case 11:addindex(0,0,0,0,0,0,0,0,0,0,-BearState.getInfo().second[0][i]);break;
+                        case 15:
+                        {                       
+                            if(BearState.getInfo().second[0][i]>=100)
+                                addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-MaxHp*(double)BearState.getInfo().second[0][i]/10000.0);
+                            else
+                                addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-BearState.getInfo().second[0][i]);
+                            break;
+                        }
+                        case 16:addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-BearState.getInfo().second[0][i]);break;
                         default:break;
                     }
                 }
@@ -202,34 +230,36 @@ void soldier::checkState(int x, int y, int num)
                         }
                         break;
                     }
-                    case 5:
-                    {
-                        if(BearState.getInfo().second[0][i]>=100)
-                            addindex(-BearState.getInfo().second[0][i]*MaxHp/10000.0);
-                        else
-                            addindex(-BearState.getInfo().second[0][i]);
-                        break;
-                    }
+                    case 5:addindex(-BearState.getInfo().second[0][i]);break;
                     case 7:
                     {
-                        if(random()<missrate)
-                            {std::cout<<"miss!"<<std::endl;break;}
-                        if(shield>=BearState.getInfo().second[0][i])
-                            addindex(0,0,0,0,0,-BearState.getInfo().second[0][i]);
+                        int harming;
+                        // if(random()<missrate)
+                        // {std::cout<<"miss!"<<std::endl;break;}
+                        if(iceshield>=BearState.getInfo().second[0][i])
+                        {
+                            addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-BearState.getInfo().second[0][i]);
+                            makerecord(BearState.getInfo().second[2][i],BearState.getInfo().second[3][i],BearState.getInfo().second[4][i],(soldierState)14,1,1);
+                            harming=0;
+                        }
+                        else if(iceshield>0)
+                        {
+                            makerecord(BearState.getInfo().second[2][i],BearState.getInfo().second[3][i],BearState.getInfo().second[4][i],(soldierState)14,1,1);
+                            harming=BearState.getInfo().second[0][i]-iceshield;
+                            iceshield=0;
+                        }
+                        else harming=BearState.getInfo().second[0][i];
+                        if(shield>=harming)
+                            addindex(0,0,0,0,0,-harming);
                         else
                         {
-                            int harming=BearState.getInfo().second[0][i]-shield;
+                            harming=harming-shield;
                             addindex(-Up_quzheng(harming*cifang(0.75,defense)));
                             shield=0;
                         }
                         break;
                     }
-                    case 6:
-                    {
-                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
-                            switching(&freedom);
-                        break;
-                    }
+                    case 6:freedom=0;break;
                     case 10:
                     {
                         if(BearState.getInfo().second[0][i]>=100)
@@ -239,12 +269,7 @@ void soldier::checkState(int x, int y, int num)
                         break;
                     }
                     case 8:addindex(0,BearState.getInfo().second[0][i]);break;
-                    case 9:
-                    {
-                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
-                            switching(&chaos);
-                        break;
-                    }
+                    case 9:chaos=1;break;
                     case 11:
                     {
                         if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
@@ -255,16 +280,49 @@ void soldier::checkState(int x, int y, int num)
                     {
                         if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
                             addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,BearState.getInfo().second[0][i]);
+                        break;
                     }
+                    case 13:
+                    {
+                        if(BearState.getInfo().second[0][i]>=100)
+                        {
+                            makerecord(BearState.getInfo().second[2][i],BearState.getInfo().second[3][i],BearState.getInfo().second[4][i],(soldierState)10,BearState.getInfo().second[0][i]*Hp/10000.0,1);
+                            if(BearState.getInfo().second[0][i]*Hp/10000.0>=10)
+                                makerecord(BearState.getInfo().second[2][i],BearState.getInfo().second[3][i],BearState.getInfo().second[4][i],(soldierState)9,1,3);
+                            addindex(-BearState.getInfo().second[0][i]*Hp/10000.0);
+                        }
+                        else
+                            addindex(-BearState.getInfo().second[0][i]);
+                        break;
+                    }
+                    case 14:addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,BearState.getInfo().second[0][i]);break;
+                    case 15:
+                    {
+                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
+                        {
+                            if(BearState.getInfo().second[0][i]>=100)
+                                addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,MaxHp*(double)BearState.getInfo().second[0][i]/10000.0);
+                            else
+                                addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,+BearState.getInfo().second[0][i]);
+                        }
+                        break;
+                    }
+                    case 16:
+                    {
+                        if(BearState.getInfo().second[1][i]==BearState.getInfo().second[5][i])
+                            addindex(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BearState.getInfo().second[0][i]);
+                        break;
+                    }
+                    case 17:addindex(-BearState.getInfo().second[0][i]);break;
                     default:break;
                     
                 } 
         } 
         BearState.settlement(x,y,num);  
-    }   
+    }  
 }
 
-void soldier::addindex(int Hp, int rage, int missrate, int harm, int defense, int shield, int level, int MaxHp, int speed, int range, int reBound, int Maxdefense, int rageUp, int vine)
+void soldier::addindex(int Hp, int rage, int missrate, int harm, int defense, int shield, int level, int MaxHp, int speed, int range, int reBound, int Maxdefense, int rageUp, int vine, int ice, int iceshield, int world)
 {
     this->Hp=edge(this->Hp+Hp,0,this->MaxHp);
     this->shield=edgeleft(this->shield+shield,0);
@@ -280,6 +338,9 @@ void soldier::addindex(int Hp, int rage, int missrate, int harm, int defense, in
     this->Maxdefense=edgeleft(this->Maxdefense+Maxdefense,0);
     this->rageUp+=rageUp;
     this->vine=edgeleft(this->vine+vine,0);
+    this->ice=edgeleft(this->ice+ice,0);
+    this->iceshield=edgeleft(this->iceshield+iceshield,0);
+    this->world+=world;
 }
 
 void soldier::makerecord(int zhenying, int x, int y, soldierState a, int strength, int duration)
@@ -306,7 +367,7 @@ void soldier::changeMyState(int a, int strength, int duration, int x, int y, int
 
 int* soldier::getInfo()
 {
-    int* Info = new int[17];
+    int* Info = new int[20];
     Info[0]=Hp,
     Info[1]=rage,
     Info[2]=missrate,
@@ -324,6 +385,9 @@ int* soldier::getInfo()
     Info[14]=rageUp;
     Info[15]=chaos;
     Info[16]=vine;
+    Info[17]=ice;
+    Info[18]=iceshield;
+    Info[19]=world;
     return Info;
 }
 
@@ -332,8 +396,16 @@ void soldier::show()
     std::cout<<"Hp: "<<Hp<<"/"<<MaxHp<<std::right<<std::setw(20)<<"rage: "<<rage<<std::right<<std::setw(20)<<"missrate: "<<missrate<<std::right<<std::setw(20)<<"harm: "<<harm;toEnter(2);
     std::cout<<"defense :"<<defense<<std::right<<std::setw(20)<<"shield: "<<shield<<std::right<<std::setw(20)<<"level: "<<level<<std::right<<std::setw(20)<<"freedom: "<<freedom;toEnter(2);
     std::cout<<"speed: "<<speed<<std::right<<std::setw(20)<<"range: "<<range<<std::right<<std::setw(20)<<"warname: "<<type<<std::right<<std::setw(20)<<"reBound:"<<reBound;toEnter(2);
-    std::cout<<"chaos: "<<chaos;toEnter(2);
+    std::cout<<"chaos: "<<chaos<<std::right<<std::setw(20)<<"vine: "<<vine<<std::right<<std::setw(20)<<"ice: "<<ice<<std::right<<std::setw(20)<<"iceshield: "<<iceshield;toEnter(2);
+    std::cout<<"world: "<<world;toEnter(2);
     MyState.show();
+}
+
+void soldier::relive()
+{
+    rage=0,Hp=MaxHp,record.clear(),MyState.clear(),BearState.clear();
+    shield=0,freedom=1,defense=Maxdefense,reBound=0,chaos=0;
+    vine=0,ice=0,iceshield=0,world=0;
 }
 
 State::State()
@@ -449,3 +521,215 @@ void State::erase(int x, int y, int num)
         SthHappen((soldierState)0,999,999,0,0,0);
 }
 
+void warrior::levelUp()
+{
+    addindex(0,0,0,2,0,0,1,15,0,0,0,1);
+    addindex(15,0,0,0,1);
+    int* Info=getInfo();
+    if(Info[6]==3)
+        addindex(0,0,0,0,0,0,0,0,0,0,0,0,14);
+    delete[] Info;
+}
+
+void archer::levelUp()
+{
+    addindex(0,0,0,3,0,0,1,10,0,0,0,1);
+    addindex(10,0,0,0,1);
+    int* Info=getInfo();
+    if(Info[6]==3)
+        addindex(0,0,0,0,0,0,0,0,0,0,0,0,14);
+    delete[] Info;
+}
+
+void magician::levelUp()
+{
+    addindex(0,0,5,2,0,5,1,5,0,0,0,1);
+    addindex(5,0,0,0,1);
+    int* Info=getInfo();
+    if(Info[6]==2)
+        addindex(0,0,0,0,0,0,0,0,0,0,0,0,14);
+    delete[] Info;
+}
+
+void assassin::levelUp()
+{
+    addindex(0,0,5,2,0,0,1,10,0,0,0,1);
+    addindex(10,0,0,0,1);
+    int* Info=getInfo();
+    if(Info[6]==3)
+        addindex(0,0,0,0,0,0,0,0,0,0,0,0,14);
+    delete[] Info;
+}
+
+void warrior::relive()
+{
+    soldier::relive();
+    int* Info=getInfo();
+    addindex(0,0,-100,-100);
+    addindex(0,0,10,Info[6]*2);
+    delete[] Info;
+}
+
+void archer::relive()
+{
+    soldier::relive();
+    int* Info=getInfo();
+    addindex(0,0,-100,-100,0,0,0,0,0,-100);
+    addindex(0,0,5,1+Info[6]*3,0,0,0,0,0,3);
+    delete[] Info;
+}
+void magician::relive()
+{
+    soldier::relive();
+    int* Info=getInfo();
+    addindex(0,0,-100,-100);
+    addindex(0,0,5*Info[6],1+Info[6]*2);
+    delete[] Info;
+}
+void assassin::relive()
+{
+    soldier::relive();
+    int* Info=getInfo();
+    addindex(0,0,-100,-100,0,0,0,0,-100);
+    addindex(0,0,15+5*Info[6],2+Info[6]*2,0,0,0,0,3);
+    delete[] Info;
+}
+
+void base::makebase(int index)
+{
+    buffindex=index;
+}
+
+int base::getbaseBuff()
+{
+    return buffindex;
+}
+
+int particle::changeparticle(int delta, int particleUp)
+{
+    energyamount=edge(energyamount+delta,0,100);
+    this->particleUp=edge(this->particleUp+particleUp,0,100);
+    return energyamount;
+}
+
+int particle::getDelta()
+{
+    return particleUp;
+}
+
+void particle::switchstate()
+{
+    switching(&state);
+}
+
+int particle::showstate()
+{
+    return state;
+}
+
+void Reiki::changeReiki(int ReikiAmount,int ReikiUp)
+{
+    this->Reikiamount=edge(ReikiAmount+this->Reikiamount,0,100);
+    this->ReikiUp+=ReikiUp;
+}
+
+int Reiki::switchstate()
+{
+    if(state==0)
+        state=1;
+    else
+        state=0;
+        return state;
+}
+
+std::vector<int> Reiki::ReikiInfo(){
+    std::vector<int> tem={Reikiamount,state,ReikiUp};
+    return tem;
+}
+
+void wild::Makewildness(double Hp, double MaxHp)
+{
+    wildness=(1.0-Hp/MaxHp)*100.0;
+}
+
+void wild::levelUp(int level)
+{
+    if(level==2)
+        prorate=25;
+    else if(level==3)
+        prorate=20;
+    else prorate=30;
+}
+int wild::getWildness()
+{
+    int tem=wildness/prorate;
+    return tem;
+}
+
+void wild::show()
+{
+    std::cout<<"wildness: "<<wildness<<std::setw(20)<<"prorate: "<<prorate;toEnter(2);
+}
+
+void soldier::makeit(int index)
+{
+    buffrate=index;
+}
+
+int soldier::getbuffNum()
+{
+    return buffrate;
+}
+
+void warrior::buff()
+{
+    int* Info=getInfo();
+    int buffnum=getbuffNum();
+    if(random()<20*buffnum)
+        addindex(Info[8]*0.08);
+    delete[]Info;
+}
+
+void archer::buff()
+{
+    int buffnum=getbuffNum();
+    if(random()<20*buffnum)
+        changeMyState(2,1,1);
+    if(buffnum==2&&getInfo()[10]==3)
+        addindex(0,0,0,0,0,0,0,0,0,1);
+}
+
+void magician::buff()
+{
+    int buffnum=getbuffNum();
+    if(random()<20*buffnum)
+        changeMyState(8,34,1);
+}
+
+void assassin::buff()
+{
+    int* Info=getInfo();
+    int buffnum=getbuffNum();
+    if(random()<20*buffnum)
+        changeMyState(3,10,1);
+    if(buffnum==2&&getInfo()[9]==3)
+        addindex(0,0,0,0,0,0,0,0,1);
+    delete[]Info;   
+}
+
+void particle::buff()
+{
+    if(random()<25*getbaseBuff())
+        changeparticle(50);
+}
+
+void Reiki::buff()
+{
+    if(random()<25*getbaseBuff())
+        changeReiki(ReikiInfo()[0]);
+}
+
+void wild::buff()
+{
+    prorate-=getbaseBuff()*2;
+}

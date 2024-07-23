@@ -8,21 +8,27 @@
 #include <random>
 
 int main() {
-    // playchess mainchess;
+    playchess mainchess;
     // mainchess.home();
 
     player a(1,"Sy");
+
+    // store Mystore(a);
+    // Mystore.generateSoldier();
+    // Mystore.menu();
+
     player b(2,"yy");
-    Hypnotist Kevin,AA;
-    ParticleWarrior Rihanna,AiMee;
-    Swordman yy,aa;
-    ParticleEngineer amy;
-    a.MyTroop()->testOnFront(&yy,1,1);
+    fire_Warrior Kevin,AA;
+    Hypnotist Rihanna,AiMee;
+    wild_Priest yy,aa;
+    ParticleWarrior amy;
+    // a.MyTroop()->testOnFront(&amy,1,1);
     a.MyTroop()->testOnFront(&amy,1,3);
-    b.MyTroop()->testOnFront(&AiMee,0,1);
-    b.MyTroop()->testOnFront(&AA,0,0);
+    // b.MyTroop()->testOnFront(&Rihanna,0,1);
+    b.MyTroop()->testOnFront(&AA,0,4);
     std::vector<player*> GreatWar={&a,&b};
     war testwar(GreatWar,0);
+    testwar.determineBuff();
     testwar.running();
 
     // mainchess.createAccount();

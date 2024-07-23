@@ -17,56 +17,56 @@ playchess::playchess()
 
 void playchess::createAccount()
 {
-    std::cout<<"Make a name for your account:";
+    std::cout<<"[创建账号]请输入一个账号(英文字母、数字可用）：";
     std::string name;
     std::cin>>name;
     std::cout<<std::endl;
-    std::vector<char> illegal={'/','\\',':','*','?','"','<','>','|',' '};
+    std::vector<char> illegal = {'/','\\',':','*','?','"','<','>','|',' '};
     for(int i=0;i<name.size();i++)
         if(Include(name[i],illegal))
-        {std::cout<<"There is an illegal character "<<name[i]<<" and please change a name";toEnter(2);std::getline(std::cin,name);createAccount();}
+        {std::cout<<"有非法字符"<<name[i]<<"，换一个账号名吧";toEnter(2);std::getline(std::cin,name);createAccount();}
     std::ifstream infile;
     infile.open("./Account/Account.txt",std::ios::in);
     if(infile.is_open()==0)
-    {std::cout<<"Cannot open the documnet Account.txt!";toEnter(2);return;}
+    {std::cout<<"无法打开Account.txt文件";toEnter(2);return;}
     std::string oldname;
     while(std::getline(infile,oldname))
         if(oldname==name)
-        {std::cout<<"The name has been occupied. Change a name!"<<std::endl;createAccount();}
+        {std::cout<<"这个账号名被使用了，换一个账号名吧。"<<std::endl;createAccount();}
     infile.close();
     std::ofstream outfile("./Account/Account.txt",std::ios::app);
     if(outfile.is_open()==0)
-    {std::cout<<"Cannot open the documnet make an account for you!";toEnter(2);return;}
+    {std::cout<<"暂时无法创建账户!";toEnter(2);return;}
     outfile<<name<<std::endl;
     outfile.close();
     std::string filename="./Account/"+name+".txt";
     outfile.open(filename,std::ios::out);
     if(outfile.is_open()==0)
-    {std::cout<<"Cannot open the documnet make an account for you!";toEnter(2);return;}   
+    {std::cout<<"暂时无法创建账户！";toEnter(2);return;}   
     outfile<<name<<" "<<makePassword()<<" 0 0 0 0.0";
     outfile.close();
-    std::cout<<"Your account is created";
+    std::cout<<"账号创建完成";
     toEnter(2);
 }
 
 void playchess::determinePeopleAmount()
 {
-    std::cout<<"Choose the player number(more than one):";
+    std::cout<<"请输入游戏成员数：";
     std::cin>>playernum;
     aliveNum=playernum;
 }
 
 int playchess::loadin()
 {
-    std::cout<<"Please input your account name:";
+    std::cout<<"请输入账号名：";
     std::string name,filename,line;
     std::cin>>name;
     std::cout<<std::endl;
     filename="./Account/"+name+".txt";
     std::ifstream infile(filename,std::ios::in);
     if(infile.is_open()==0)
-    {std::cout<<"cannot find your account! Check your name!";toEnter(2);return 0;}
-    std::cout<<"Please input your password:";
+    {std::cout<<"无法登录这个账号，请检查账号名拼写";toEnter(2);return 0;}
+    std::cout<<"请输入你的密码：";
     std::string password;
     std::cin>>password;
     std::cout<<std::endl;
@@ -87,10 +87,10 @@ int playchess::loadin()
     m[4]=line.substr(k[3]+1);
     if(password!=m[0])
     {
-        std::cout << "The password is wrong!";toEnter(2);loadin();
+        std::cout << "密码错误！请重试！";toEnter(2);loadin();
     }
     system("cls");
-    std::cout<<"Hello!"<<name;toEnter(3);
+    std::cout<<"你好，"<<name;toEnter(3);
     player tem(name,m[0],std::stoi(m[1]),std::stoi(m[2]),std::stoi(m[3]),std::stof(m[4]));
     allPlayer.push_back(tem);
     allPlayer[allPlayer.size()-1].showPersonalInfo();
@@ -111,14 +111,14 @@ void playchess::WriteA()
     while(i<playernum)
     {
         char a;
-        std::cout<<"player "<<i<<", do you have an account?(y/n)";
+        std::cout<<i+1<<"号玩家, 请问你有账户吗？(y/n)";
         std::cin>>a;
         if(lower(a)=='n')
             createAccount();
         if(loadin()==1)
             i++;
         else 
-        {std::cout<<"Try again!";toEnter(2);}
+        {std::cout<<"请重试！";toEnter(2);}
 
     }
 }
@@ -126,13 +126,13 @@ void playchess::WriteA()
 std::string playchess::makePassword()
 {
     std::string password,Toconfirm;
-    std::cout<<"Please Input Your Password:";
+    std::cout<<"请设置密码：";
     std::cin>>password;
-    std::cout<<std::endl<<"Please Confirm Your Password:";
+    std::cout<<std::endl<<"请确认你的密码：";
     std::cin>>Toconfirm;
     std::cout<<std::endl;
     if(Toconfirm!=password)
-    {std::cout<<"The two of the passwords are different. Try again!"<<std::endl;makePassword();}
+    {std::cout<<"两个密码不同，请重试！"<<std::endl;makePassword();}
     return password;
 }
 
@@ -160,7 +160,7 @@ std::vector<war> playchess::makewar()
     else 
     {
         int ran=random(0,aliveNum*10-1);
-        std::cout<<Tosort[ran%aliveNum]->Getinfo().first[0]<<" is for a bye throungh drawing lots, and will battle a weaken image troop."<<std::endl;
+        std::cout<<Tosort[ran%aliveNum]->Getinfo().first[0]<<" 轮空，将和一位镜像选手作战"<<std::endl;
         int num=aliveNum-ran%aliveNum-1;
         player mirror=*Tosort[random(0,num*10-1)%num+ran%aliveNum+1];
         std::vector<player*> tem={Tosort[ran%aliveNum],&mirror};
@@ -206,7 +206,7 @@ void playchess::running()
     }
     for(int i=0;i<playernum;i++)
         allPlayer[i].Save();
-    std::cout<<"Good game! See you next time.";
+    std::cout<<"游戏愉快！下次再见吧！";
 }
 
 void playchess::winnerDetermine()

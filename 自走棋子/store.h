@@ -14,6 +14,7 @@ class store
     void showPlayerInfo();
     void hiresoldier();
     void reGenerate();
+    void lookinto();
     void sellSoldier();
     void clean(int x);//x属于[0,WindowNum)
     void buy(int x);

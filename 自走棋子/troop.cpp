@@ -34,7 +34,7 @@ void troop::testOnFront(soldier* a, int x, int y)
 void troop::gota(soldier *newsoldier)
 {
     if(Warehouse_Amount==Warehouse_limit)
-    {std::cout<<"Your warehouse is full so you cannot got it"<<std::endl;return;}
+    {std::cout<<"你的仓库满了！"<<std::endl;return;}
     std::pair<int,soldier*>tem={0,newsoldier};
     MySoldier.push_back(tem);
     Warehouse_Amount++;
@@ -65,17 +65,17 @@ int troop::getAlive()
 void troop::getdown()
 {
     system("cls");
-    std::cout<<std::setw(75)<<" "<<"MY TROOP";
+    std::cout<<std::setw(76)<<" "<<"我的军营";
     fengexian(0,160,2,4);
-    std::cout<<std::setw(68)<<" "<<"To Change the Frontline";
+    std::cout<<std::setw(74)<<" "<<"变动前线人事";
     toEnter(3);
     showFrontline();
     fengexian(0,160,2,3);
     showAllSoldiers();
     toEnter(1);
     if(Warehouse_Amount==Warehouse_limit)
-    {std::cout<<"Your Warehouse has been full. We can sell some of soldiers in store.";system("pause");return;}
-    std::cout<<"Please input the position of the soldier you'd like to make it down the frontline:(row,column)";
+    {std::cout<<"你的仓库满了，可以去商店卖点士兵";system("pause");return;}
+    std::cout<<"请输入你想要调下前线的士兵位置(行，列)";
     std::string input;
     std::cin>>input;toEnter(1);
     std::vector<char> number={'0','1','2','3','4','5','6','7','8','9'};
@@ -85,7 +85,7 @@ void troop::getdown()
             position[num]=(int)(input[i]-48)-1,num++;
     int* Info=FrontDistribution[position[0]][position[1]].getInfo().first;
     if(Info[0]==0)
-    {std::cout<<"The position ("<<position[0]<<","<<position[1]<<") is empty. Check your intention.";system("pause");return;}
+    {std::cout<<"这个位置 ("<<position[0]<<","<<position[1]<<") 是空哒";system("pause");return;}
     delete[] Info;
     for(int i=0;i<MySoldier.size();i++)
         if(FrontDistribution[position[0]][position[1]].getInfo().second==MySoldier[i].second)
@@ -98,23 +98,27 @@ void troop::getdown()
 void troop::turnOnFrontline()
 {
     system("cls");
-    std::cout<<std::setw(75)<<" "<<"MY TROOP";
+    std::cout<<std::setw(76)<<" "<<"我的军营";
     fengexian(0,160,2,4);
-    std::cout<<std::setw(68)<<" "<<"To Change the Frontline";
+    std::cout<<std::setw(74)<<" "<<"变动前线人事";
     toEnter(3);
     showFrontline();
     fengexian(0,160,2,3);
     showAllSoldiers();
     toEnter(1);
     if(OnFrontline_Amount==OnFrontline_limit)
-    {std::cout<<"Your cannot afford the soldier to go on the frontline. Please make a personal change";system("pause");return;}
-    std::cout<<"Please input the number of the soldier you'd like to make it on the frontline of all the soldiers:";
+    {std::cout<<"你的前线承受不了这么多士兵！";system("pause");return;}
+    std::cout<<"请输入前往前线的士兵序号：";
     int input;
     std::cin>>input;toEnter(1);
     input--;
-    if(MySoldier[input].first==1)
-    {std::cout<<"The soldier has been on the frontline. Check your intention";system("pause");return;}
-    std::cout<<"Please input the position it will be:(row,column)";
+    if(input<MySoldier.size())
+    {
+        if(MySoldier[input].first==1)
+        {std::cout<<"这个士兵已经在前线了";system("pause");return;}
+    }
+    else {std::cout<<"找不到这个士兵";system("pause");return;}
+    std::cout<<"请输入这个士兵上阵的位置：(行，列)";
     std::string inpu;
     std::cin>>inpu;toEnter(1);
     std::vector<char> number={'0','1','2','3','4','5','6','7','8','9'};
@@ -124,27 +128,33 @@ void troop::turnOnFrontline()
             std::cout<<position[i]<<std::endl,position[num]=(int)(inpu[i]-48)-1,num++;
     std::cout<<position[0]<<position[1]<<std::endl;
     if(FrontDistribution[position[0]][position[1]].getInfo().first[0]==1)
-    {std::cout<<"The position has been occupied";system("pause");return;}
+    {std::cout<<"这个位置已经有人了";system("pause");return;}
     switching(&MySoldier[input].first);
     FrontDistribution[position[0]][position[1]].lay(MySoldier[input].second,position[0],position[1]);
     OnFrontline_Amount++,Warehouse_Amount--;
     return;
 }
 
+void troop::allinformation(int index)
+{
+    showAllSoldiers(index);
+    GetInfo().first[index].second->show();
+}
+
 void troop::showFrontline()
 {
-    std::cout<<std::setw(72)<<" "<<"Your Frontline:";
+    std::cout<<std::setw(78)<<" "<<"前线";
     toEnter(3);
     std::cout<<std::setw(26)<<" ";
     for(int i=0;i<5;i++)
     {
-        std::string tem="Column "+std::to_string(i+1);
-        std::cout<<std::setw(11)<<" "<<tem;
+        std::string tem="列 "+std::to_string(i+1);
+        std::cout<<std::setw(13)<<" "<<tem;
     }
     toEnter(2);
     for(int i=0;i<2;i++)
     {
-        std::cout<<std::right<<std::setw(20)<<"Row "<<i+1;
+        std::cout<<std::right<<std::setw(20)<<"行 "<<i+1;
         for(int j=0;j<5;j++)
         {
             if(FrontDistribution[i][j].getInfo().first[0]==0)
@@ -156,8 +166,8 @@ void troop::showFrontline()
         }
         toEnter(3);
     }
-    std::cout<<std::setw(30)<<" "<<"Soldiers on Frontline: "<<OnFrontline_Amount<<"/"<<OnFrontline_limit;
-    std::cout<<std::setw(30)<<" "<<"Soldiers on Warehouse: "<<Warehouse_Amount<<"/"<<Warehouse_limit;
+    std::cout<<std::setw(30)<<" "<<"前线人数："<<OnFrontline_Amount<<"/"<<OnFrontline_limit;
+    std::cout<<std::setw(50)<<" "<<"仓库人数："<<Warehouse_Amount<<"/"<<Warehouse_limit;
     toEnter(2);
 }
 
@@ -185,10 +195,10 @@ void troop::showAllSoldiers(int x)
     std::string tmp,name,type;
     if(x==100)
     {
-        std::cout<<"These are all your soldiers:";
+        std::cout<<"你的士兵：";
         toEnter(3);
         if(MySoldier.size()==0)
-        {std::cout<<std::setw(40)<<" "<<"OMG!You don't have any soldiers :(";fengexian(0,160,2,2);return;}
+        {std::cout<<std::setw(40)<<" "<<"空无一人:(";fengexian(0,160,2,2);return;}
         int times=Up_quzheng(MySoldier.size()/4.0);
         for(int j=0;j<times;j++)
         {
@@ -199,34 +209,58 @@ void troop::showAllSoldiers(int x)
             {
                 std::string level;
                 level=std::to_string(MySoldier[i+j*4].second->getInfo()[6]);
-                tmp="level: "+level;
-                std::cout<<std::left<<std::setw(40)<<tmp;
+                tmp="级别："+level;
+                std::cout<<tmp<<std::left<<std::setw(41-(tmp.length()-1)/3*2)<<" ";
             }
             toEnter(2);
             for(int i=0;i+j*4<MySoldier.size()&&i<4;i++)
             {
                 switch(MySoldier[i+j*4].second->getInfo()[11])
                 {
-                    case 1:name="Particle Warrior";break;
-                    case 2:name="Laser Archer";break;
-                    case 3:name="Particle Engineer";break;
-                    case 4:name="Dimension Assassin";break;            
+                case 1:name="量子战士";break;
+                case 2:name="激光枪手";break;
+                case 3:name="量子工程师";break;
+                case 4:name="智子";break;      
+                case 5:name="剑修";break;
+                case 6:name="心修";break;
+                case 7:name="箓修";break;
+                case 8:name="邪修";break;
+                case 9:name="野火修士";break;
+                case 10:name="十万伏特";break;
+                case 11:name="永冬";break;
+                case 12:name="漩涡猎手";break;
+                case 13:name="狼人";break;
+                case 14:name="没牙仔";break;
+                case 15:name="风祭";break;
+                case 16:name="灵树";break;              
                 }
-                tmp="name: "+name;
-                std::cout<<std::left<<std::setw(40)<<tmp;
+                tmp="名字："+name;
+                std::cout<<tmp<<std::left<<std::setw(40-(tmp.length()-1)/3*2)<<" ";
             }
             toEnter(2);
             for(int i=0;i+j*4<MySoldier.size()&&i<4;i++)
             {
                 switch(MySoldier[i+j*4].second->getInfo()[11])
                 {
-                    case 1:type="Particle World, Warrior";break;
-                    case 2:type="Particle World, Archer";break;
-                    case 3:type="Particle World, Magician";break;
-                    case 4:type="Particle World, Assassin";break;            
+                case 1:type="量子世界, 战士";break;
+                case 2:type="量子世界, 弓箭手";break;
+                case 3:type="量子世界, 魔法师";break;
+                case 4:type="量子世界, 刺客";break; 
+                case 5:type="修仙世界，战士";break;
+                case 6:type="修仙世界，弓箭手";break;
+                case 7:type="修仙世界，魔法师";break;
+                case 8:type="修仙世界，刺客";break;
+                case 9:type="元素世界，战士";break;
+                case 10:type="元素世界，弓箭手";break;
+                case 11:type="元素世界，魔法师";break;
+                case 12:type="元素世界，刺客";break;
+                case 13:type="野兽世界，战士";break;
+                case 14:type="野兽世界，弓箭手";break;
+                case 15:type="野兽世界，魔法师";break;
+                case 16:type="野兽世界，刺客";break;    
                 }
-                tmp="type: "+type;
-                std::cout<<std::left<<std::setw(40)<<tmp;
+                tmp="类型："+type;
+                std::cout<<tmp<<std::left<<std::setw(40-(tmp.length()-1)/3*2)<<" ";
             }
             toEnter(2);
             for(int i=0;i+j*4<MySoldier.size()&&i<4;i++)
@@ -234,11 +268,11 @@ void troop::showAllSoldiers(int x)
                 std::string Position;
                 switch(MySoldier[i+j*4].first)
                 {
-                    case 0:Position="Warehouse";break;
-                    case 1:Position="Frontline";break;
+                    case 0:Position="仓库";break;
+                    case 1:Position="前线";break;
                 }
-                tmp="Where: "+Position;
-                std::cout<<std::left<<std::setw(40)<<tmp;
+                tmp="位置："+Position;
+                std::cout<<tmp<<std::left<<std::setw(40-(tmp.length()-1)/3*2)<<" ";
             }
             toEnter(2);
             for(int i=0;i+j*4<MySoldier.size()&&i<4;i++)
@@ -246,15 +280,15 @@ void troop::showAllSoldiers(int x)
                 int* Info=MySoldier[i+j*4].second->getInfo();
                 std::string warname=std::to_string(Info[11]);
                 delete[] Info;
-                tmp="Warname: "+warname;
-                std::cout<<std::left<<std::setw(40)<<tmp;
+                tmp="战争编号："+warname;
+                std::cout<<tmp<<std::left<<std::setw(40-(tmp.length()-1)/3*2)<<" ";
             }
             toEnter(2);
             for(int i=0;i+j*4<MySoldier.size()&&i<4;i++)
             {
                 std::string Detail;
                 if(MySoldier[i+j*4].first==0)
-                    Detail="Warehouse";
+                    Detail="仓库";
                 else
                 {
                     for(int x=0; x<2;x++)
@@ -265,8 +299,8 @@ void troop::showAllSoldiers(int x)
                                 Detail="("+std::to_string(Info[3]+1)+","+std::to_string(Info[4]+1)+")";
                             }
                 }
-                tmp="Detailed Position: "+Detail;
-                std::cout<<std::left<<std::setw(40)<<tmp;
+                tmp="具体位置："+Detail;
+                std::cout<<tmp<<std::left<<std::setw(40-(tmp.length()-1)/3*2)<<" ";
             }
             toEnter(3);
         }
@@ -275,40 +309,66 @@ void troop::showAllSoldiers(int x)
     {
         int* Info=MySoldier[x].second->getInfo();
         std::cout<<std::setw(79)<<" "<<x+1;toEnter(2);
-        tmp="level: "+std::to_string(Info[6]);
+        tmp="级别："+std::to_string(Info[6]);
         std::cout<<std::left<<std::setw(65)<<" "<<tmp;toEnter(2);
         switch(Info[11])
         {
-            case 1:name="Particle Warrior";break;
-            case 2:name="Laser Archer";break;
-            case 3:name="Particle Engineer";break;
-            case 4:name="Dimension Assassin";break;            
+        case 1:name="量子战士";break;
+        case 2:name="激光枪手";break;
+        case 3:name="量子工程师";break;
+        case 4:name="智子";break;      
+        case 5:name="剑修";break;
+        case 6:name="心修";break;
+        case 7:name="箓修";break;
+        case 8:name="邪修";break;
+        case 9:name="野火修士";break;
+        case 10:name="十万伏特";break;
+        case 11:name="永冬";break;
+        case 12:name="漩涡猎手";break;
+        case 13:name="狼人";break;
+        case 14:name="没牙仔";break;
+        case 15:name="风祭";break;
+        case 16:name="灵树";break;              
         }
-        tmp="name: "+name;
-        std::cout<<std::left<<std::setw(65)<<" "<<tmp;toEnter(2);
+        tmp="名字："+name;
+        std::cout<<std::setw(65)<<" "<<tmp<<std::left<<std::setw(40-(tmp.length()-1)/3*2)<<" ";
+        toEnter(2);
         switch(Info[11])
         {
-            case 1:type="Particle World, Warrior";break;
-            case 2:type="Particle World, Archer";break;
-            case 3:type="Particle World, Magician";break;
-            case 4:type="Particle World, Assassin";break;            
+            case 1:type="量子世界, 战士";break;
+            case 2:type="量子世界, 弓箭手";break;
+            case 3:type="量子世界, 魔法师";break;
+            case 4:type="量子世界, 刺客";break; 
+            case 5:type="修仙世界，战士";break;
+            case 6:type="修仙世界，弓箭手";break;
+            case 7:type="修仙世界，魔法师";break;
+            case 8:type="修仙世界，刺客";break;
+            case 9:type="元素世界，战士";break;
+            case 10:type="元素世界，弓箭手";break;
+            case 11:type="元素世界，魔法师";break;
+            case 12:type="元素世界，刺客";break;
+            case 13:type="野兽世界，战士";break;
+            case 14:type="野兽世界，弓箭手";break;
+            case 15:type="野兽世界，魔法师";break;
+            case 16:type="野兽世界，刺客";break;    
         }
-        tmp="type: "+type;
-        std::cout<<std::left<<std::setw(65)<<" "<<tmp;toEnter(2);
+        tmp="类型："+type;
+        std::cout<<std::setw(65)<<" "<<tmp<<std::left<<std::setw(40-(tmp.length()-1)/3*2)<<" ";
+        toEnter(2);
         std::string Position;
         switch(MySoldier[x].first)
         {
-            case 0:Position="Warehouse";break;
-            case 1:Position="Frontline";break;
+            case 0:Position="仓库";break;
+            case 1:Position="前线";break;
         }
-        tmp="Where: "+Position;
+        tmp="位置："+Position;
         std::cout<<std::left<<std::setw(65)<<" "<<tmp;toEnter(2);
         std::string warname=std::to_string(Info[11]);
-        tmp="Warname: "+warname;
+        tmp="战争编号："+warname;
         std::cout<<std::left<<std::setw(65)<<" "<<tmp;toEnter(2);
         std::string Detail;
         if(MySoldier[x].first==0)
-            Detail="Warehouse";
+            Detail="仓库";
         else
         {
             for(int i=0; i<2;i++)
@@ -319,7 +379,7 @@ void troop::showAllSoldiers(int x)
                         Detail="("+std::to_string(Info[3]+1)+","+std::to_string(Info[4]+1)+")";
                     }
         }
-        tmp="Detailed Position: "+Detail;
+        tmp="具体位置"+Detail;
         std::cout<<std::left<<std::setw(65)<<" "<<tmp;toEnter(2);
         delete[] Info;
     }

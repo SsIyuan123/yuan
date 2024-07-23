@@ -2,105 +2,6 @@
 #define CHESS_TYPE_H
 #include "chessbase.h"
 
-//角色分为四个阵营，分别为粒子（particle），Reiki（灵气），元素（element）和野蛮（wild）各有特色
-
-//particle来自未来，通过粒子科技进行打击，特点是防御很高
-class particle 
-{
-    public:
-    particle(int energyamount = 0):energyamount(energyamount),state(0),particleUp(34){}
-    int changeparticle(int delta, int particleUp = 0);
-    int getDelta();
-    void switchstate();
-    int showstate();
-    private:
-    int energyamount;
-    int state;
-    int particleUp;
-};
-
-//Reiki属于修仙世界，身手敏捷，特点是躲避能力强、近战伤害很高
-class Reiki
-{
-    public:
-    Reiki(int Reikiamount = 0):Reikiamount(0),state(0),ReikiUp(34){}
-    void changeReiki(int ReikiAmount, int ReikiUp=0);
-    int switchstate();
-    std::vector<int> ReikiInfo();
-    private:
-    int Reikiamount;
-    int state;
-    int ReikiUp;
-};
-
-class element
-{
-    public:
-    element(int fireflag = 0, int electricityflag = 0){}
-    // void changeflag(int fire, int elctricity);
-    private:
-    int fireflag;
-    int electricityflag;
-};
-
-class wild
-{
-    public:
-    wild(int wildness = 0){}
-    // void changewildness(int delta);
-    private:
-    int wildness;
-};
-
-class warrior:public soldier
-{
-    public:
-    warrior(int type= 0, int Hp=50, int harm=4, int defense=3, int missrate=10, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 2, int range = 1, int rageUp = 20):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense,0,rageUp){}
-    virtual void levelUp();
-};
-
-class archer:public soldier
-{
-    public:
-    archer(int type = 0, int Hp=30,int harm=6, int defense=1, int missrate=5, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 1, int range = 3, int rageUp = 20):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense,0,rageUp){}
-    virtual void levelUp();
-};
-
-class magician:public soldier
-{
-    public:
-    magician(int type = 0, int Hp=25,int harm=5, int defense=2, int missrate=5, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 1, int range = 3, int rageUp = 20):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense,0,rageUp){}
-    virtual void levelUp();
-};
-
-class assassin:public soldier
-{
-    public:
-    assassin(int type = 0, int Hp=35,int harm=7, int defense=1, int missrate=20, int level=1, int rage=0, int shield = 0, int freedom = 1, int speed = 3, int range = 2, int rageUp = 20):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense,0,rageUp){}
-    virtual void levelUp();
-};
-
-class Mecha:public soldier, public particle
-{
-    public:
-    Mecha(int Hp=70, int harm=8, int defense=4, int missrate=0, int level=0, int rage=0, int shield = 0, int energyamount=0, int freedom = 1, int speed = 2, int range = 2, int type=0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense),particle(energyamount){}
-};
-
-class JadeEmperor:public soldier, public Reiki
-{
-    JadeEmperor(int Hp=30, int harm=12, int defense=8, int missrate=30, int level=0, int rage=0, int shield = 0, int Reikiamount=0, int freedom = 1, int speed = 1, int range =5, int type =0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense),Reiki(Reikiamount){}
-};
-
-class Dragon:public soldier, public element
-{
-    Dragon(int Hp=40, int harm=6, int defense=5, int missrate=15, int level=0, int rage=0, int shield = 0, int freedom = 1, int speed = 2, int fire=1, int electricity=1, int range =4, int type =0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense),element(fire,electricity){}
-};
-
-class werewolf:public soldier, public wild
-{
-    werewolf(int Hp=100, int harm=8, int defense=2, int missrate=20, int level=0, int rage=0, int shield = 0, int freedom = 1, int speed = 5, int wildness=0, int range =1, int type =0):soldier(Hp,rage,missrate,harm,defense,shield,level,freedom,Hp,speed,range,type,defense),wild(wildness){}
-};
-
 class ParticleWarrior:public warrior, public particle
 {
     public:
@@ -108,6 +9,8 @@ class ParticleWarrior:public warrior, public particle
     virtual void done(std::vector<std::vector<int>> position);
     virtual void show();
     virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
 };
 
 class LaserArcher:public archer, public particle
@@ -117,6 +20,8 @@ class LaserArcher:public archer, public particle
     virtual void done(std::vector<std::vector<int>> position);
     virtual void show();
     virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
 };
 
 class ParticleEngineer:public magician, public particle
@@ -126,6 +31,8 @@ class ParticleEngineer:public magician, public particle
     virtual void done(std::vector<std::vector<int>> position);
     virtual void show();
     virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
 };
 
 class DimensionAssassin:public assassin, public particle
@@ -135,6 +42,8 @@ class DimensionAssassin:public assassin, public particle
     virtual void done(std::vector<std::vector<int>> position);
     virtual void show();
     virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
 };
 
 class Swordman:public warrior, public Reiki
@@ -144,6 +53,8 @@ class Swordman:public warrior, public Reiki
     virtual void done(std::vector<std::vector<int>> position);
     virtual void show();
     virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
 };
 
 class Hypnotist:public archer, public Reiki
@@ -153,14 +64,19 @@ class Hypnotist:public archer, public Reiki
     virtual void done(std::vector<std::vector<int>> position);
     virtual void show();
     virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
 };
 
 class Fulu_Painter:public magician,public Reiki
 {
+    public:
     Fulu_Painter():magician(7),Reiki(){}
     virtual void done(std::vector<std::vector<int>> position);
     virtual void show();
     virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
     void thumder_Fu(std::vector<std::vector<int>> position);
     void wind_Fu(std::vector<std::vector<int>> position);
     void quake_Fu(std::vector<std::vector<int>> position);
@@ -171,10 +87,121 @@ class Fulu_Painter:public magician,public Reiki
 
 class Sorcerer:public assassin, public Reiki
 {
+    public:
     Sorcerer():assassin(8),Reiki(){}
     virtual void done(std::vector<std::vector<int>> position);
     virtual void show();
     virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
+};
+
+class fire_Warrior:public warrior, public element
+{
+    public:
+    fire_Warrior():warrior(9),element(),fireAmount(0),fireharm(1),rate(3),firestrengthTime(0){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
+    void buff();
+    private:
+    int fireAmount;
+    int fireharm;
+    int rate;
+    int firestrengthTime;
+};
+
+class electri_Archer:public archer, public element
+{
+    public:
+    electri_Archer():archer(10),element(){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
+    void chain_electricity(std::vector<std::vector<int>> position);
+    void buff();
+};
+
+class ice_Magician:public magician, public element
+{
+    public:
+    ice_Magician():magician(11),element(){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
+    void buff();
+}; 
+
+class vortexSailer:public assassin, public element
+{
+    public:
+    vortexSailer();
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();  
+    virtual void relive(); 
+    virtual void makebaseBuff(int index);
+    void buff();
+    private:
+    int worldnum;
+    static std::vector<int> allWorld;
+};
+
+class wereWolf:public warrior, public wild
+{
+    public:
+    wereWolf():warrior(13),wild(),bloody(0),bloodstate(0),bloodstatetime(0){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
+    private:
+    int bloody;
+    int bloodstate;
+    int bloodstatetime;
+
+};
+
+class Dragon:public archer, public wild
+{
+    public:
+    Dragon():archer(14,40),wild(){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void levelUp();
+    virtual void relive();
+    virtual void makebaseBuff(int index);
+};
+
+class wild_Priest:public magician, public wild
+{
+    public:
+    wild_Priest():magician(15),wild(){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void relive();
+    virtual void levelUp();
+    virtual void makebaseBuff(int index);
+};
+
+class Dryads:public assassin, public wild
+{
+    public:
+    Dryads():assassin(16),wild(),usedblood(0),blood(0){}
+    virtual void done(std::vector<std::vector<int>> position);
+    virtual void show();
+    virtual void relive();
+    virtual void levelUp();
+    virtual void makebaseBuff(int index);
+    int usedblood;
+    int blood;
 };
 
 #endif

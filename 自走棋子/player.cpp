@@ -46,7 +46,7 @@ player::player(const player &tem)
 player::player(int test,std::string name):
     name(name),WinAmount(0),
     One(0),Total(0),Winrate(0),
-    Money(5),level(1),experience(0)
+    Money(1000000),level(1),experience(0)
 {}
 
 void player::Save()
@@ -59,7 +59,7 @@ void player::Save()
         outfile<<name<<" "<<password<<" "<<WinAmount<<" "<<One<<" "<<Total<<" "<<Winrate;
         outfile.close();
     }
-    else std::cerr<<"cannot create the document"<<std::endl;
+    else std::cerr<<"暂时无法保存数据！"<<std::endl;
 }
 
 void player::reFresh()
@@ -77,21 +77,21 @@ void player::reFresh()
 void player::changeFrontline()
 {
     system("cls");
-    std::cout<<std::setw(75)<<" "<<"MY TROOP";
+    std::cout<<std::setw(76)<<" "<<"我的军营";
     fengexian(0,160,2,4);
-    std::cout<<std::setw(68)<<" "<<"To Change the Frontline";
+    std::cout<<std::setw(74)<<" "<<"变动前线人事";
     toEnter(3);
     Atroop.showFrontline();
     fengexian(0,160,2,3);
     Atroop.showAllSoldiers();
     toEnter(1);
-    std::cout<<std::setw(73)<<" "<<"Your Authority";
+    std::cout<<std::setw(76)<<" "<<"可用权力：";
     toEnter(2);
-    std::cout<<std::setw(64)<<" "<<"1.Get a soldier down the frontline";
+    std::cout<<std::setw(72)<<" "<<"1.换下前线士兵";
     toEnter(2);
-    std::cout<<std::setw(63)<<" "<<"2.Turn a soldier on the frontline";
+    std::cout<<std::setw(72)<<" "<<"2.指派前往前线";
     toEnter(2);
-    std::cout<<"Please input your instruction (1/2/0)(If 0, return):";
+    std::cout<<"你想发号的指令是：(1/2/0)如果输入0，则返回军营菜单:";
     int ins;
     std::cin>>ins;toEnter(1);
     switch(ins)
@@ -110,7 +110,7 @@ void player::changeFrontline()
             break;
         }
         default:
-        {std::cout<<"What do you mean?";system("pause");changeFrontline();break;}
+        {std::cout<<"什么意思？没懂";system("pause");changeFrontline();break;}
     }
 }
 
@@ -124,27 +124,27 @@ void player::troopMenu()
     while(true)
     {
         system("cls");
-        std::cout<<"SALUTE "<<name<<", WELCOME TO TROOP";
+        std::cout<<"向"<<name<<"致敬！欢迎回到军营！";
         toEnter(2);
-        std::cout<<std::setw(75)<<" "<<"MY TROOP";
+        std::cout<<std::setw(76)<<" "<<"我的军营";
         fengexian(0,160,2,4);
         Atroop.showFrontline();
         fengexian(0,160,2,3);
         Atroop.showAllSoldiers();
         toEnter(2);
-        std::cout<<std::setw(73)<<" "<<"Your Authority";
+        std::cout<<std::setw(76)<<" "<<"可用权力：";
         toEnter(3);
-        std::cout<<std::setw(68)<<" "<<"1.Change The Frontline";
+        std::cout<<std::setw(75)<<" "<<"1.改变前线";
         toEnter(2);
-        std::cout<<std::setw(68)<<" "<<"2.Upgrade Your Soldier";
+        std::cout<<std::setw(75)<<" "<<"2.升级士兵";
         toEnter(2);
-        std::cout<<std::setw(66)<<" "<<"3.Look into formation buff";
+        std::cout<<std::setw(75)<<" "<<"3.查阅阵法";
         toEnter(2);
-        std::cout<<std::setw(64)<<" "<<"4.Search the soldiers' details";
+        std::cout<<std::setw(75)<<" "<<"4.查询士兵";
         toEnter(2);
-        std::cout<<std::setw(73)<<" "<<"5.To the store";
+        std::cout<<std::setw(75)<<" "<<"5.去商店";
         fengexian(0,160,2,3);
-        std::cout<<"Please input your instruction (1/2/3/4/5/6):";
+        std::cout<<"请下达指示(1/2/3/4/5/6):";
         std::cin.clear();
         int ins;
         std::cin>>ins;
@@ -155,11 +155,11 @@ void player::troopMenu()
         {
             Atroop.showAllSoldiers();
             Upgrade();
-            std::cout<<"Automatically blend three of the same soldiers to get grades up";system("pause");
+            std::cout<<"已为您自动合成3个相同的士兵升级";system("pause");
         }
         else if(ins == 3)
         {
-            std::cout<<"The service is being exploiting";system("pause");
+            std::cout<<"服务正在开发中……";system("pause");
         }
         else if(ins == 4)
         {
@@ -240,10 +240,10 @@ void player::showDetail()
     while(true)
     {
         system("cls");
-        std::cout<<std::setw(75)<<" "<<"MY TROOP";
+        std::cout<<std::setw(76)<<" "<<"我的军营";
         fengexian(0,160,2,4);
         Atroop.showAllSoldiers();
-        std::cout<<"Please input the number of the soldier you'd like to search for more detailed information:(If 0, return)";
+        std::cout<<"请输入你想查阅更多信息的士兵编号:（如果输入0，返回菜单）";
         int num;
         std::cin>>num;
         toEnter(2);
@@ -252,10 +252,9 @@ void player::showDetail()
         else
         {
             system("cls");
-            std::cout<<std::setw(75)<<" "<<"MY TROOP";
+            std::cout<<std::setw(75)<<" "<<"我的军营";
             fengexian(0,160,2,4);
-            Atroop.showAllSoldiers(num-1);
-            Atroop.GetInfo().first[num-1].second->show();
+            Atroop.allinformation(num-1);
             system("pause");
         }
     }
@@ -308,19 +307,19 @@ void player::showPersonalInfo()
     std::string tmp;
     std::cout<<std::setw(40-name.size()/2)<<" "<<name;
     toEnter(2);
-    tmp="Hp: "+std::to_string(Hp);
+    tmp="血量: "+std::to_string(Hp);
     std::cout<<std::setw(20)<<" "<<std::left<<std::setw(32)<<tmp;
-    tmp="Level: "+std::to_string(level);
+    tmp="级别: "+std::to_string(level);
     std::cout<<std::left<<std::setw(32)<<tmp;
     toEnter(2);
-    tmp="Wins: "+std::to_string(WinAmount);
+    tmp="胜场数: "+std::to_string(WinAmount);
     std::cout<<std::setw(20)<<" "<<std::left<<std::setw(32)<<tmp;
-    tmp="Big Winner: "+std::to_string(One);
+    tmp="第一名场数: "+std::to_string(One);
     std::cout<<std::left<<std::setw(32)<<tmp;
     toEnter(2);
-    tmp="Total playtimes: "+std::to_string(Total);
+    tmp="总场数: "+std::to_string(Total);
     std::cout<<std::setw(20)<<" "<<std::left<<std::setw(32)<<tmp;
-    tmp="Win rate: "+std::to_string(Winrate);
+    tmp="胜率: "+std::to_string(Winrate);
     std::cout<<std::left<<std::setw(32)<<tmp;
     toEnter(2);
     system("pause");
